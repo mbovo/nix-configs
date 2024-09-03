@@ -13,7 +13,7 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
-    pdhpkg.url = "github:mbovo/pdh";
+    pdhpkg.url = "github:mbovo/pdh/v0.4.1";
     nix-configs-priv = {
       url = "git+ssh://git@github.com/mbovo/nix-configs-priv";
       flake = false;
