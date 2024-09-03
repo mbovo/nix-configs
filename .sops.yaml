@@ -1,0 +1,9 @@
+keys:
+  - &manuel_bovo age1tlh0kyxu7tdpeug2pw3pkh6ukwp6pg9v55rzwhzjnpqpkqj0ypxqz7u98k
+  - &manuel_mbk age1tlql00wpkpt4tmey0ha0kw9pwyjz809lrpdtmsskxpjwzrzlxvusywgqq7
+creation_rules:
+  - path_regex: ^.*.sops$
+    key_groups:
+    - age:
+      - *manuel_bovo
+      - *manuel_mbk

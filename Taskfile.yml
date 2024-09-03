@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task -l
+    silent: true
+
+  check:
+    desc: Run checks
+    cmds:
+      - statix check
+
+  precommit-hook:
+    cmds:
+      - echo "statix check" > .git/hooks/pre-commit
+      - chmod +x .git/hooks/pre-commit
+    sources:
+      - .git/hooks/pre-commit
+    generates:
+      - .git/hooks/pre-commit
+    method: checksum
+
+  setup:
+    desc: Bootstrap dev environment
+    cmds:
+      - task: precommit-hook
+
+  reset:
+    desc: Reset dev environment
+    cmds:
+      - rm -rf .venv .task
