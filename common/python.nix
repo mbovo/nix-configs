@@ -1,7 +1,8 @@
-{ config, pkgs, homeDirectory, sops, pdh, priv-config, ...}:
+{ config, pkgs, homeDirectory, sops, pdh, priv-config, ...}@inputs:
 { 
   home = {
-    packages = with pkgs; [ 
+    # using unstable to install python3.12
+    packages = with inputs.pkgs-unstable; [ 
       (python3.withPackages 
         (pp: [
           pp.pyyaml
