@@ -200,11 +200,11 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1725531115,
-        "narHash": "sha256-XLBgtb/U2fTONYEOHFv21zkUnZT0OuEA4IHpOmj0x+w=",
+        "lastModified": 1727361502,
+        "narHash": "sha256-fHZwQi1ghv9u/YA8qtCct2Xb65MQRUxauCaWQHt12no=",
         "owner": "mbovo",
         "repo": "pdh",
-        "rev": "379ec27403a5263ddae7072ecde9e52ed5d9d928",
+        "rev": "c8608d8dbca697ca16c15b07267a8b9778150bf0",
         "type": "github"
       },
       "original": {
