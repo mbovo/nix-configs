@@ -1,4 +1,4 @@
-{ config, pkgs, priv-config, ...}:
+{ config, pkgs, pkgs-unstable, priv-config, ...}:
 {
   home = {
     packages = with pkgs; [
@@ -22,7 +22,7 @@
       # Modern Tools
       asciinema
       bat
-      devbox
+      # devbox pinned to unstable
       eza
       fd
       fzf
@@ -35,7 +35,11 @@
       yq
       nil
       nix-output-monitor
-    ] ++ (with pkgs.bat-extras; [ batdiff ]);
+    ] ++ (with pkgs.bat-extras; [ batdiff ])
+    ++ 
+    [ 
+      pkgs-unstable.devbox
+    ];
 
     file = {
       ".tmux.conf".source = "${priv-config}/common/dotfiles/.tmux.conf";
