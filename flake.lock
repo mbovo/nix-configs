@@ -78,11 +78,11 @@
     "nix-configs-priv": {
       "flake": false,
       "locked": {
-        "lastModified": 1725361565,
-        "narHash": "sha256-ztr3vmqbPc1hA6YPMBXvB8NcLmbYol+DntyP+IGfMEQ=",
+        "lastModified": 1729861402,
+        "narHash": "sha256-FIwss2ELCABuHsaJHw/N8IuWAo0+y1ZlvO6fCAJ2Hmo=",
         "ref": "refs/heads/main",
-        "rev": "678c7f211320cec02b4372e544072c580489a670",
-        "revCount": 1,
+        "rev": "40eb8ad08fe79dc1d6178caaf424a3144dad829e",
+        "revCount": 2,
         "type": "git",
         "url": "ssh://git@github.com/mbovo/nix-configs-priv"
       },
