@@ -3,14 +3,14 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/24.05";
-    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";
     sops-nix = { 
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
     pdhpkg.url = "github:mbovo/pdh";
