@@ -8,7 +8,7 @@
       age
       gnupg24
       sops
-      bitwarden-cli
+      #bitwarden-cli
     ];
   };
 }
