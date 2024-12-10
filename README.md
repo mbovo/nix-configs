@@ -6,9 +6,9 @@ First steps on `nix` world, I'm currently just using `home-manager` to install u
 
 I'm using `direnv` and `nix develop` or `devbox` to manage my development environments.
 
-## Directory Structure:
+## Directory Structure
 
-```
+```bash
 .
 ├── common                                # configurations and modules shared across all hosts
 │  ├── cli-tools.nix                   # all tools and cli utilities I use
@@ -25,3 +25,13 @@ I'm using `direnv` and `nix develop` or `devbox` to manage my development enviro
 ```
 
 Dotfiles and secrets are sops-encryted and stored in a private repository.
+
+### How to bootstrap a new host
+
+1. Install `nix` and `home-manager` (depends on target OS)
+2. Clone this repository
+3. Run `nix develop` enter a development environment
+4. Generate age key for this host ```age-keygen -o ~/.config/sops/age/keys.txt```
+5. Add the public key to sops config of the private repository and re-encrypt everything/prepare the secrets for this host
+6. Run `gh auth login` to authenticate with GitHub and create a private key for the host
+7. Run `home-manager switch` to apply the configuration

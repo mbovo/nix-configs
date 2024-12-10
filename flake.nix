@@ -15,7 +15,7 @@
     };
     pdhpkg.url = "github:mbovo/pdh";
     nix-configs-priv = {
-      url = "git+ssh://git@github.com/mbovo/nix-configs-priv";
+      url = "git+ssh://git@github.com/mbovo/nix-configs-priv?ref=main";
       flake = false;
     };
   };
@@ -47,6 +47,9 @@
             go-task
             sops
             nix-output-monitor
+            git
+            gh
+            age
           ];
         };
       }
