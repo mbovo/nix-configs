@@ -1,4 +1,4 @@
-{ config, pkgs, ...}@inputs:
+{ config, pkgs, priv-config, ...}@inputs:
 
 {
   home = {
@@ -16,5 +16,8 @@
       kyverno
       stern
     ];
+    file = {
+        "krew_list".source = "${priv-config}/common/krew_list";
+      };
   };
 }

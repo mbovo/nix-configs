@@ -78,11 +78,11 @@
     "nix-configs-priv": {
       "flake": false,
       "locked": {
-        "lastModified": 1733836871,
-        "narHash": "sha256-Ls6BJFpC4DH+zqtnDcjQHtZnZ+Bdn1nnIwOLbU7iQOU=",
+        "lastModified": 1733910478,
+        "narHash": "sha256-XZ27kZQQWoTTgClLuZeS5aFBC7viOs8fgafDBZwMZnk=",
         "ref": "main",
-        "rev": "06e541789cb21615265683e778676cd4591fce68",
-        "revCount": 7,
+        "rev": "9c99fda2cb3062f78e2e10747aed4b9dedbb116d",
+        "revCount": 8,
         "type": "git",
         "url": "ssh://git@github.com/mbovo/nix-configs-priv"
       },
@@ -132,11 +132,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1733550349,
-        "narHash": "sha256-NcGumB4Lr6KSDq+nIqXtNA8QwAQKDSZT7N9OTGWbTrs=",
+        "lastModified": 1733808091,
+        "narHash": "sha256-KWwINTQelKOoQgrXftxoqxmKFZb9pLVfnRvK270nkVk=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "e2605d0744c2417b09f8bf850dfca42fcf537d34",
+        "rev": "a0f3e10d94359665dba45b71b4227b0aeb851f8e",
         "type": "github"
       },
       "original": {
