@@ -26,7 +26,7 @@ I'm using `direnv` and `nix develop` or `devbox` to manage my development enviro
 
 Dotfiles and secrets are sops-encryted and stored in a private repository.
 
-### How to bootstrap a new host
+## How to bootstrap a new host
 
 1. Install `nix` and `home-manager` (depends on target OS)
 2. Clone this repository
@@ -35,3 +35,13 @@ Dotfiles and secrets are sops-encryted and stored in a private repository.
 5. Add the public key to sops config of the private repository and re-encrypt everything/prepare the secrets for this host
 6. Run `gh auth login` to authenticate with GitHub and create a private key for the host
 7. Run `home-manager switch` to apply the configuration
+
+## Keep it update
+
+```bash
+nix flake update
+home-manager build -L |& nom
+
+# If there are no errors
+home-manager switch -L |& nom
+```
