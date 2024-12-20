@@ -3,7 +3,7 @@
   home = {
     packages = with pkgs; [
 
-      #wezterm # installed with brew since it's at system level #FIXME
+      #wezterm # installed with brew since it's at system level
       bash
       nvd
       nix-diff
