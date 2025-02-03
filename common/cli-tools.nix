@@ -27,7 +27,7 @@
       fd
       fzf
       glow
-      go-task
+      taskwarrior
       jq
       neovim
       ripgrep

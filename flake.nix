@@ -16,6 +16,7 @@
     pdhpkg.url = "github:mbovo/pdh";
     nix-configs-priv = {
       url = "git+ssh://git@github.com/mbovo/nix-configs-priv?ref=main";
+      #url = "git+file:///Users/manuelbovo/oss/nix-configs-priv";
       flake = false;
     };
   };
@@ -50,6 +51,7 @@
             git
             gh
             age
+            nh
           ];
         };
       }
@@ -61,7 +63,7 @@
         # ==================================================================================================================
         # personal MacOs configuration
         # ==================================================================================================================
-        "manuel@mbp" = home-manager.lib.homeManagerConfiguration rec{
+        "manuel@mbp.local" = home-manager.lib.homeManagerConfiguration rec{
           pkgs = extraSpecialArgs.pkgs-stable; # using nixpgs-unstable as default (see below)
           extraSpecialArgs = rec{
             system = "x86_64-darwin";
