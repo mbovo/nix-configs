@@ -78,11 +78,11 @@
     "nix-configs-priv": {
       "flake": false,
       "locked": {
-        "lastModified": 1738837000,
-        "narHash": "sha256-38Ur+2HoqOxvrsdhH3smvifG3X5XhXrcaplvF36Y+mg=",
+        "lastModified": 1738837539,
+        "narHash": "sha256-qp4s8xXUMtejp9O91/dx3W5WCMOh+/wJzXobOH2VmP0=",
         "ref": "main",
-        "rev": "c07bef9d07a692f4fb6df9a63d01b8babc6e1ad7",
-        "revCount": 32,
+        "rev": "9accac0abf0b79539ed658115b42ea7f2efd2548",
+        "revCount": 33,
         "type": "git",
         "url": "ssh://git@github.com/mbovo/nix-configs-priv"
       },
@@ -132,11 +132,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1738702386,
-        "narHash": "sha256-nJj8f78AYAxl/zqLiFGXn5Im1qjFKU8yBPKoWEeZN5M=",
+        "lastModified": 1738843498,
+        "narHash": "sha256-7x+Q4xgFj9UxZZO9aUDCR8h4vyYut4zPUvfj3i+jBHE=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "030ba1976b7c0e1a67d9716b17308ccdab5b381e",
+        "rev": "f5a32fa27df91dfc4b762671a0e0a859a8a0058f",
         "type": "github"
       },
       "original": {
@@ -148,11 +148,11 @@
     },
     "nixpkgs-stable-darwin": {
       "locked": {
-        "lastModified": 1738739810,
-        "narHash": "sha256-Oyi/LSCng0aU1SJejU6qUeiQWFQ1DXEzU99sGoE9XZ0=",
+        "lastModified": 1738788816,
+        "narHash": "sha256-0RNNX7izll0vpuJ6+ej6IGfnCIvkOHGkZIw9uoBlVBY=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "0a9533e00b72a74d4c69cf1dbb36d5cac7477ea7",
+        "rev": "b12d0c98b3eb7e358199c9887226d351264e013d",
         "type": "github"
       },
       "original": {

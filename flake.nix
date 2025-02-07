@@ -63,7 +63,7 @@
         # ==================================================================================================================
         # personal MacOs configuration
         # ==================================================================================================================
-        "manuel@mbp" = home-manager.lib.homeManagerConfiguration rec{
+        "manuel@mbp.local" = home-manager.lib.homeManagerConfiguration rec{
           pkgs = extraSpecialArgs.pkgs-stable; # using nixpgs-unstable as default (see below)
           extraSpecialArgs = rec{
             system = "x86_64-darwin";
