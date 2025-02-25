@@ -71,12 +71,32 @@
         };
         push = {
           autoSetupRemote = "true";
+          followTags = "true";
+        };
+        pull = {
+          rebase = "false";
+        };
+        fetch = {
+          prune = "true";
+          pruneTags = "true";
+          all = "true";
+        };
+        rebase = {
+          autoStash = "true";
+          updateRefs = "true";
+          autoSquash = "true";
         };
         init = {
           defaultBranch = "main";
         };
-        pull = {
-          rebase = "false";
+        tag = {
+          sort = "version:refname";
+        };
+        branch = {
+          sort = "-committerdate";
+        };
+        column = {
+          ui = "auto";
         };
         gc = {
           writeCommitGraph = "true";
