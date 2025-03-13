@@ -34,14 +34,14 @@ Dotfiles and secrets are sops-encryted and stored in a private repository.
 4. Generate age key for this host ```age-keygen -o ~/.config/sops/age/keys.txt```
 5. Add the public key to sops config of the private repository and re-encrypt everything/prepare the secrets for this host
 6. Run `gh auth login` to authenticate with GitHub and create a private key for the host
-7. Run `home-manager switch` to apply the configuration
+7. Run `home-manager` (`nh home switch`) to apply the configuration
 
 ## Keep it update
 
 ```bash
 nix flake update
-home-manager build -L |& nom
+nh home build .
 
 # If there are no errors
-home-manager switch -L |& nom
+nh home switch .
 ```
