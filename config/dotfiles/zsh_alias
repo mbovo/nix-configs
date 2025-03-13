@@ -1,0 +1,25 @@
+alias ls='exa --git'
+alias ll='ls -la'
+alias l='ls -lh'
+alias lart='ls -lah -snew'
+alias lrt='ls -lh -snew '
+alias grep='rg'
+alias vg='vagrant'
+alias d='docker'
+alias k='kubectl'
+alias gcr='cd $(git root)'
+alias fzfb='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
+
+# kubernetes
+alias ksys='kubectl -n kube-system'
+alias clustername='ksys get cm kubeadm-config -o jsonpath="{.data.ClusterConfiguration}"  | grep clusterName | sed "s/clusterName: //g"'
+
+# terraform
+alias tf='terraform'
+alias tfa='terraform apply'
+alias tfp='terraform plan'
+alias tfaa='terraform apply -auto-approve'
+alias tg='terragrunt'
+alias tgp='terragrunt plan'
+alias tga='terragrunt apply'
+alias tgaa='terragrunt apply -auto-approve'

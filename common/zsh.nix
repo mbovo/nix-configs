@@ -11,12 +11,12 @@
     ];
 
     file = {
-      ".zshrc".source = "${priv-config}/common/dotfiles/.zshrc";
-      ".zsh_alias".source = "${priv-config}/common/dotfiles/.zsh_alias";
-      ".zsh_funx".source = "${priv-config}/common/dotfiles/.zsh_funx";
-      ".p10k.zsh".source = "${priv-config}/common/dotfiles/.p10k.zsh";
-      ".atuin.zsh".source = "${priv-config}/common/dotfiles/.atuin.zsh";
-      ".config/atuin/config.toml".source = "${priv-config}/common/dotfiles/config/atuin/config.toml";
+      ".zshrc".source = ../config/dotfiles/zshrc;
+      ".zsh_alias".source = ../config/dotfiles/zsh_alias;
+      ".zsh_funx".source = ../config/dotfiles/zsh_funx;
+      ".p10k.zsh".source = ../config/dotfiles/p10k.zsh;
+      ".atuin.zsh".source = ../config/dotfiles/atuin.zsh;
+      ".config/atuin/config.toml".source = ../config/dotfiles/config/atuin/config.toml;
     };
   };
 

@@ -17,7 +17,7 @@
       stern
     ];
     file = {
-        "krew_list".source = "${priv-config}/common/krew_list";
+        "krew_list".source = ../config/krew_list;
       };
   };
 }

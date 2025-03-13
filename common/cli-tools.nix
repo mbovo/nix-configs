@@ -27,7 +27,6 @@
       fd
       fzf
       glow
-      taskwarrior
       jq
       neovim
       ripgrep
@@ -42,9 +41,9 @@
     ];
 
     file = {
-      ".tmux.conf".source = "${priv-config}/common/dotfiles/.tmux.conf";
-      ".wezterm.lua".source = "${priv-config}/common/dotfiles/.wezterm.lua";
-      ".config/direnv/direnv.toml".source = "${priv-config}/common/dotfiles/config/direnv/direnv.toml";
+      ".tmux.conf".source = ../config/dotfiles/tmux.conf;
+      ".wezterm.lua".source = ../config/dotfiles/wezterm.lua;
+      ".config/direnv/direnv.toml".source = ../config/dotfiles/config/direnv/direnv.toml;
     };
 
     sessionVariables = {

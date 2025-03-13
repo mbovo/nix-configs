@@ -1,0 +1,35 @@
+
+
+function rec(){
+  context=$(kubectl config current-context | cut -d "/" -f 1)
+  name="$(date +"%Y-%m-%d_%H-%M")_$context_$1"
+  asciinema rec -i "0.3" ~/recs/$name
+}
+
+function rec_list(){
+  ls -lh ~/recs/
+}
+
+function rec_play(){
+  asciinema play ~/recs/$1
+}
+
+function rec2svg(){
+ cat $1 | svg-term --out $1.svg --window
+}
+
+function kimages(){
+ kubectl get nodes -ojsonpath='{range .items[*].status.images[*]}{.names[0]}{"\n"}{end}' | sort | uniq
+}
+
+function kreadypod(){
+ k get po | egrep -v "1/1|2/2|3/3" | grep -v Completed
+}
+
+function kev {
+ kubectl get events  --sort-by='.metadata.creationTimestamp'  -o 'go-template={{range .items}}{{.involvedObject.name}}{{"\t"}}{{.involvedObject.kind}}{{"\t"}}{{.message}}{{"\t"}}{{.reason}}{{"\t"}}{{.type}}{{"\t"}}{{.firstTimestamp}}{{"\n"}}{{end}}'
+}
+
+kfailpo(){
+ kubectl get pod $@ | grep -v "1/1|2/2|3/3|4/4|5/5" | grep -v " Completed| Error"
+}

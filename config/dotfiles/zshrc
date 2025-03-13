@@ -1,0 +1,69 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+export GPG_TTY=$(tty)
+
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+export ZSH="$HOME/.nix-profile/share/oh-my-zsh/"
+source $HOME/.nix-profile/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+
+plugins=(git-prompt git shrink-path gh kubectl)
+
+source $ZSH/oh-my-zsh.sh
+
+autoload -Uz compinit promptinit
+autoload -Uz run-help-git
+autoload -Uz colors
+colors
+compinit
+promptinit
+zstyle ':completion:*' rehash true
+zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
+zstyle ':zsh-kubectl-prompt:' namespace true
+zstyle ':completion:*' menu select
+#zstyle ':completion:*:warnings' format '%BSorry, no way for %d%b'
+#unsetopt correctall
+setopt hist_ignore_space
+setopt hist_find_no_dups
+setopt INC_APPEND_HISTORY
+setopt EXTENDED_HISTORY
+setopt autocd
+setopt extendedglob
+
+fpath+=~/.zfunc
+eval "$(direnv hook zsh)"
+
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+export PS1='%{$fg[red]%}$(kube_ps1)%{$reset_color%} %{$fg_no_bold[yellow]%}$(shrink_path -f) %{$reset_color%}$(git_prompt_info) %(!.#.$) '
+
+export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg_no_bold[yellow]%}%B"
+export ZSH_THEME_GIT_PROMPT_SUFFIX="%b%{$fg_bold[blue]%})%{$reset_color%} "
+export ZSH_THEME_GIT_PROMPT_CLEAN=""
+export ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg_bold[red]%}✗"
+export RPROMPT=""
+
+export EDITOR='nvim'
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export HIST_STAMPS="%Y/%m/%d-%T"
+export HISTTIMEFORMAT="[%F %T] "
+export HISTSIZE=2000000
+export HISTFILESIZE=200000
+export GOPATH=~/go
+export FZF_DEFAULT_COMMAND='rg --files --follow'
+export KUBECTL_EXTERNAL_DIFF="colordiff"
+export PATH=$HOME/bin:$HOME/go/bin:$HOME/.krew/bin:$HOME/.arkade/bin/:/usr/local/bin:/usr/local/sbin:/usr/local/opt/libpq/bin:$PATH
+
+ulimit -Sn 8192
+
+# Aliases
+[[ ! -f ~/.zsh_alias ]] || source ~/.zsh_alias
+[[ ! -f ~/.zsh_funx ]] || source ~/.zsh_funx
+[[ ! -f ~/.atuin.zsh ]] || source ~/.atuin.zsh
+[[ ! -f ~/.secrets/jira.env ]] || source ~/.secrets/jira.env
+[[ ! -f ~/.zsh_custom ]] || source ~/.zsh_custom

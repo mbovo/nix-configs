@@ -11,7 +11,7 @@
     ];
 
     file = {
-      ".gitignore_global".source = "${priv-config}/common/dotfiles/.gitignore_global";
+      ".gitignore_global".source = ../config/dotfiles/gitignore_global;
     };
   };
 
