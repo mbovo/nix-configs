@@ -23,3 +23,17 @@ alias tg='terragrunt'
 alias tgp='terragrunt plan'
 alias tga='terragrunt apply'
 alias tgaa='terragrunt apply -auto-approve'
+
+# devbox
+alias dr='devbox run'
+
+# pulumi
+alias p='pulumi'
+alias ppr='pulumi preview'
+alias pprd='pulumi preview --diff'
+alias pdiff='pulumi preview --diff'
+alias pup="pulumi up"
+alias puppa="pulumi up -y"
+alias plog="pulumi logs -f"
+alias pss='pulumi stack select'
+alias plogin="pulumi login $@"
