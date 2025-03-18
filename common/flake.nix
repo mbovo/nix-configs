@@ -10,6 +10,7 @@
     ./sec-tools.nix
     ./zsh.nix
     ./ssh.nix
+    ./nixify.nix
   ];
 
   home = {

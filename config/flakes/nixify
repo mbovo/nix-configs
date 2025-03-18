@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+  echo "Usage: nixify <flake-name>"
+  exit 1
+fi
+
+echo "use flake ~/bin/flake_$1 --impure" > $(PWD)/.envrc 
+direnv allow
