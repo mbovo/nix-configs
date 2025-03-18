@@ -31,7 +31,5 @@ Thumbs.db
 git_hidden*
 .terraform/
 .code-workspace
-.devbox/
-devbox.json
-devbox.lock
 .envrc
+.direnv
