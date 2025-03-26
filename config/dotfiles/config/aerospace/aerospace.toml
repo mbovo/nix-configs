@@ -158,8 +158,15 @@ ctrl-t = ['layout floating tiling']
 cmd-enter = ['exec-and-forget ~/bin/scratchpad.sh']
 
 [workspace-to-monitor-force-assignment]
-# move workspace 9 and 10 to the secondary monitor and 8 to the third monitor
-    8 = ['main','HP-E24u']
+# move workspaces 8 - 10 to the secondary monitor (currently called LG HDR 4K)
+    1 = ['main']
+    2 = ['main']
+    3 = ['main']
+    4 = ['main']
+    5 = ['main']
+    6 = ['main']
+    7 = ['main']
+    8 = ['secondary', 'LG HDR 4K']
     9 = ['secondary', 'LG HDR 4K']
     10 = ['secondary', 'LG HDR 4K']
 
@@ -187,18 +194,24 @@ cmd-enter = ['exec-and-forget ~/bin/scratchpad.sh']
     run = ['layout floating', 'move-node-to-workspace 1'] 
 
 [[on-window-detected]]
+    if.app-name-regex-substring = '^[dD]iscord'
+    run = ['move-node-to-workspace 8'] 
+
+[[on-window-detected]]
     if.app-name-regex-substring = '^[sS]lack'
     run = ['move-node-to-workspace 9'] 
 
 [[on-window-detected]]
-    if.app-name-regex-substring = '^[dD]iscord'
-    run = ['move-node-to-workspace 9'] 
+    if.app-name-regex-substring = '^Google Chrome'
+    run = ['move-node-to-workspace 10']
 
 [[on-window-detected]]
-    if.app-name-regex-substring = '^Google Chrome'
-    run = ['move-node-to-workspace 9']
+    if.app-name-regex-substring = '^Mail'
+    run = ['move-node-to-workspace 10']
 
-
+[[on-window-detected]]
+    if.app-name-regex-substring = '^Calendar'
+    run = ['move-node-to-workspace 10']
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 # ctrl-r = 'mode service'
