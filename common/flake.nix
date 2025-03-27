@@ -11,6 +11,7 @@
     ./zsh.nix
     ./ssh.nix
     ./nixify.nix
+    ../module/browser/default.nix
   ];
 
   home = {
