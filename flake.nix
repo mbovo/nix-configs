@@ -25,11 +25,12 @@
     };
   };
 
-  outputs = { home-manager,flake-utils, ... }@inputs:
+  outputs = { home-manager,flake-utils, self, ... }@inputs:
     let
+      inherit (self) outputs;
       # defaults modules for all systems
       mods = {
-        common = [ inputs.sops-nix.homeManagerModules.sops ./common/flake.nix ];
+        common = [ inputs.sops-nix.homeManagerModules.sops ./common ];
         darwin = [ ./common/darwin.nix ./common/docker4mac.nix ];
         linux  = [ ./common/linux.nix ];
       };
@@ -63,6 +64,7 @@
     //
 ## home-manager configurations
     {
+      homeManagerModules = import ./modules/home-manager;
       homeConfigurations = {
         # ==================================================================================================================
         # personal MacOs configuration
@@ -79,7 +81,8 @@
             # pdh = inputs.pdhpkg.packages.${system};
             priv-config = inputs.nix-configs-priv;
           };
-          modules = mods.common ++ mods.darwin ++ [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ];
+          modules = mods.common ++ mods.darwin ++ [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ] ++ 
+          builtins.attrValues outputs.homeManagerModules;
         };
         # ==================================================================================================================
 

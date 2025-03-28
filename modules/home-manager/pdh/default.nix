@@ -1,29 +1,17 @@
-{ config, pkgs, lib, ...}@inputs:
+{ config, pkgs, lib, system, ...}@inputs:
 let
   pdh_repo = import (pkgs.fetchFromGitHub {
       owner = "mbovo";
       repo = "pdh";
-      rev = "main";
-      sha256 = "";
+      rev = "52844e2318f69e4c629b4041e621e2ae58e1ef16";
+      sha256 = "sha256-Mk1bQns2cv6qGjhc1Vud0YWcUeORwVMmzy+vYrOYcU8=";
     }) {
       inherit (pkgs) system;
     };
-
+  pdh_flake = import "${pdh_repo}/flake.nix";
 in
 {
-
-  options = {
-    myhome.apps.pdh.enable = lib.mkOption {
-      default = false;
-      type = lib.types.bool;
-      description = "enable PDH pagerduty cli";
-    };
-  };
-
-  config = lib.mkIf config.myhome.apps.pdh.enable {
-    home.packages = with pdh_repo; [
-      pdh
-    ];
-  };
-
+  home.packages = [
+       pdh_flake.packages.${system}.pdh
+   ];
 }

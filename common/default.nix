@@ -5,13 +5,13 @@
     ./cli-tools.nix
     ./docker.nix
     ./git.nix
-    ./kubernetes.nix
+    # ./kubernetes.nix
     ./python.nix
     ./sec-tools.nix
     ./zsh.nix
     ./ssh.nix
     ./nixify.nix
-    ../modules/home-manager/pdh
+    ../modules/home-manager/k8s
   ];
 
   home = {
@@ -26,6 +26,14 @@
       '';
     };
   };
+
+  custom.k8s.enable = true;
+  custom.k8s.extra.enable = true;
+  custom.k8s.extra.clusterctl.enable = true;
+  custom.k8s.extra.kyverno.enable = true;
+  custom.k8s.extra.fluxcd.enable = true;
+  # custom.k8s.extra.argocd.enable = true;
+  # custom.k8s.extra.argocd.package = inputs.pkgs-unstable.argocd;
 
   programs = {
     home-manager.enable = true;
