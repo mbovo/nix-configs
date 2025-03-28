@@ -11,7 +11,7 @@
     ./zsh.nix
     ./ssh.nix
     ./nixify.nix
-    ../module/browser/default.nix
+    ../modules/home-manager/pdh
   ];
 
   home = {

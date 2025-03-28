@@ -1,19 +1,23 @@
 {
-  description = "Home Manager configuration";
+  description = "mbovo home-manager configuration";
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";
-    sops-nix = { 
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
+    flake-utils.url = "github:numtide/flake-utils";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
-    pdhpkg.url = "github:mbovo/pdh";
+
+    sops-nix = { 
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+
+    # pdhpkg.url = "github:mbovo/pdh";
+    
     nix-configs-priv = {
       url = "git+ssh://git@github.com/mbovo/nix-configs-priv?ref=main";
       #url = "git+file:///Users/manuelbovo/oss/nix-configs-priv";
@@ -72,7 +76,7 @@
             homeDirectory = "${paths.home.${system}}${username}";
             pkgs-stable = inputs.nixpkgs-stable-darwin.legacyPackages.${system};
             pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-            pdh = inputs.pdhpkg.packages.${system};
+            # pdh = inputs.pdhpkg.packages.${system};
             priv-config = inputs.nix-configs-priv;
           };
           modules = mods.common ++ mods.darwin ++ [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ];
@@ -91,7 +95,7 @@
             homeDirectory = "${paths.home.${system}}${username}";
             pkgs-stable = inputs.nixpkgs-stable-darwin.legacyPackages.${system};
             pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-            pdh = inputs.pdhpkg.packages.${system};
+            # pdh = inputs.pdhpkg.packages.${system};
             priv-config = inputs.nix-configs-priv;
           };
           modules = mods.common ++ mods.darwin ++ [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ];
@@ -110,7 +114,7 @@
             homeDirectory = "${paths.home.${system}}${username}";
             pkgs-stable = inputs.nixpkgs-stable-darwin.legacyPackages.${system};
             pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-            pdh = inputs.pdhpkg.packages.${system};
+            # pdh = inputs.pdhpkg.packages.${system};
             priv-config = inputs.nix-configs-priv;
           };
           modules = mods.common ++ mods.darwin ++ [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ];

@@ -1,4 +1,4 @@
-{ config, pkgs, homeDirectory, sops, pdh, priv-config, ...}@inputs:
+{ config, pkgs, homeDirectory, sops, priv-config, ...}@inputs:
 { 
   home = {
     # using unstable to install python3.12
@@ -9,7 +9,7 @@
         ]
         )
       )
-      pdh.cli
+      # pdh.cli
     ];
   };
   
