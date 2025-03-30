@@ -14,6 +14,7 @@
     ../modules/home-manager/docker
     ../modules/home-manager/k8s
     ../modules/home-manager/zsh
+    ../modules/home-manager/fonts
   ];
 
   home = {
@@ -37,10 +38,10 @@
   custom.docker.enable = true;
   custom.docker.config.daemon = "${inputs.priv-config}/common/dotfiles/docker/daemon.json";
   custom.docker.config.file = "${inputs.priv-config}/common/dotfiles/docker/config.json.sops";
-  
+
+  custom.fonts.nerdFonts.enable = true;  
 
   custom.zsh.enable = true;
-  custom.zsh.nerdFonts.enable = true;
   custom.zsh.extra.files = {
       ".zshrc" = ../config/dotfiles/zshrc;
       ".zsh_alias" = ../config/dotfiles/zsh_alias;

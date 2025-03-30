@@ -13,13 +13,6 @@
       ];
       description = "List of custom zsh packages to install.";
     };
-    custom.zsh.nerdFonts.enable = lib.mkEnableOption "Enable nerd fonts";
-    custom.zsh.nerdFonts.fonts = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ "FiraCode" "Hack" ];
-      description = "List of nerd fonts to install.";
-    };
-
 
     custom.zsh.extra.files = lib.mkOption {
       type = lib.types.attrsOf lib.types.path;
@@ -52,11 +45,6 @@
   config = lib.mkMerge [
     (lib.mkIf config.custom.zsh.enable {
       home.packages = config.custom.zsh.packages;
-    })
-    (lib.mkIf config.custom.zsh.nerdFonts.enable {
-      home.packages = with pkgs; [
-        (nerdfonts.override { fonts = config.custom.zsh.nerdFonts.fonts; })
-      ];
     })
     (lib.mkIf (config.custom.zsh.extra.files != {}) {
       home.file = lib.genAttrs (builtins.attrNames config.custom.zsh.extra.files) (name: {
