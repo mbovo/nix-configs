@@ -3,11 +3,7 @@
 {
 
   options = {
-    custom.docker.enable = lib.mkOption {
-      default = false;
-      type = lib.types.bool;
-      description = "enable docker tools (docker, docker-compose, etc...)";
-    };
+    custom.docker.enable = lib.mkEnableOption "Enable custom docker configuration";
 
     custom.docker.package = lib.mkOption {
       default = pkgs.docker;
@@ -28,7 +24,7 @@
     custom.docker.extra.enable = lib.mkOption {
       default = config.custom.docker.enable;
       type = lib.types.bool;
-      description = "enable docker extra packages";
+      description = "Enable extra docker packages";
     };
 
     custom.docker.extra.packages = lib.mkOption {

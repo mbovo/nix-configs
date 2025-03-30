@@ -8,11 +8,12 @@
     # ./kubernetes.nix
     ./python.nix
     ./sec-tools.nix
-    ./zsh.nix
+    # ./zsh.nix
     ./ssh.nix
     ./nixify.nix
     ../modules/home-manager/docker
     ../modules/home-manager/k8s
+    ../modules/home-manager/zsh
   ];
 
   home = {
@@ -37,6 +38,21 @@
   custom.docker.config.daemon = "${inputs.priv-config}/common/dotfiles/docker/daemon.json";
   custom.docker.config.file = "${inputs.priv-config}/common/dotfiles/docker/config.json.sops";
   
+
+  custom.zsh.enable = true;
+  custom.zsh.nerdFonts.enable = true;
+  custom.zsh.extra.files = {
+      ".zshrc" = ../config/dotfiles/zshrc;
+      ".zsh_alias" = ../config/dotfiles/zsh_alias;
+      ".zsh_funx" = ../config/dotfiles/zsh_funx;
+      ".p10k.zsh" = ../config/dotfiles/p10k.zsh;
+      ".config/atuin/config.toml" = ../config/dotfiles/config/atuin/config.toml;
+  };
+  custom.atuin.enable = true;
+  custom.atuin.key = "${inputs.priv-config}/common/dotfiles/local/share/atuin/atuin.key";
+  custom.atuin.config = ../config/dotfiles/config/atuin/config.toml;
+
+
   programs = {
     home-manager.enable = true;
   };
