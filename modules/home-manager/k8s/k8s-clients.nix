@@ -91,7 +91,7 @@
       (lib.mkIf config.custom.k8s.enable { 
         home.packages = config.custom.k8s.packages;
         home.file = {
-            "krew_list".source = ../../../config/krew_list;
+            "krew_list".source = ../../../config/krew_list; #TODO: make it agnostic, it should be passed as a option
           };
       })
       (lib.mkIf config.custom.k8s.extra.enable { 
