@@ -34,7 +34,9 @@
   custom.k8s.extra.kyverno.enable = true;
   custom.k8s.extra.fluxcd.enable = true;
   custom.docker.enable = true;
-
+  custom.docker.config.daemon = "${inputs.priv-config}/common/dotfiles/docker/daemon.json";
+  custom.docker.config.file = "${inputs.priv-config}/common/dotfiles/docker/config.json.sops";
+  
   programs = {
     home-manager.enable = true;
   };

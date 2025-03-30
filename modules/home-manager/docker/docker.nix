@@ -1,4 +1,4 @@
-{config, pkgs, lib, priv-config, homeDirectory,...}@inputs:
+{config, pkgs, lib, homeDirectory,...}@inputs:
 
 {
 
@@ -40,6 +40,19 @@
       type = lib.types.listOf lib.types.package;
       description = "list of docker packages to install";
     };
+
+    custom.docker.config.daemon = lib.mkOption {
+      default = null;
+      type = lib.types.nullOr lib.types.path;
+      description = "path to the docker daemon config file (if any)";
+    };
+
+    custom.docker.config.file = lib.mkOption {
+      default = null;
+      type = lib.types.nullOr lib.types.path;
+      description = "path to the docker config file (if any)";
+    };
+
   };
 
   config = lib.mkMerge [ 
@@ -51,19 +64,21 @@
           else
             # just install docker
             [ config.custom.docker.package ];
-
-        # Create docker daemon config file
-        home.file.".docker/daemon.json".source = "${priv-config}/common/dotfiles/docker/daemon.json";
-
-        # Create docker config file
-        sops.secrets.dockerconfig = {
-          format = "binary";
-          sopsFile = "${priv-config}/common/dotfiles/docker/config.json.sops";
-          path = "${homeDirectory}/.docker/config.json";
-        };
     })
     (lib.mkIf config.custom.docker.extra.enable {
       home.packages = with pkgs; config.custom.docker.extra.packages;
+    })
+    (lib.mkIf (config.custom.docker.config.daemon != null) {
+      home.file.".docker/daemon.json".source = config.custom.docker.config.daemon;
+    })
+    (lib.mkIf (config.custom.docker.config.file != null) {
+        
+        # Create docker config file
+        sops.secrets.dockerconfig = {
+          format = "binary";
+          sopsFile = config.custom.docker.config.file;
+          path = "${homeDirectory}/.docker/config.json";
+        };
     })
   ];
 
