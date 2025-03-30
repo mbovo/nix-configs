@@ -3,7 +3,7 @@
 
   imports = [
     ./cli-tools.nix
-    ./docker.nix
+    # ./docker.nix
     ./git.nix
     # ./kubernetes.nix
     ./python.nix
@@ -11,6 +11,7 @@
     ./zsh.nix
     ./ssh.nix
     ./nixify.nix
+    ../modules/home-manager/docker
     ../modules/home-manager/k8s
   ];
 
@@ -32,8 +33,7 @@
   custom.k8s.extra.clusterctl.enable = true;
   custom.k8s.extra.kyverno.enable = true;
   custom.k8s.extra.fluxcd.enable = true;
-  # custom.k8s.extra.argocd.enable = true;
-  # custom.k8s.extra.argocd.package = inputs.pkgs-unstable.argocd;
+  custom.docker.enable = true;
 
   programs = {
     home-manager.enable = true;

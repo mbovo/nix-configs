@@ -2,7 +2,7 @@
 {
 
   imports = [
-    ./k8s-clients.nix
+    ./docker.nix
   ];
 
 }

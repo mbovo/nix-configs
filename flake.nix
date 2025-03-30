@@ -31,7 +31,7 @@
       # defaults modules for all systems
       mods = {
         common = [ inputs.sops-nix.homeManagerModules.sops ./common ];
-        darwin = [ ./common/darwin.nix ./common/docker4mac.nix ];
+        darwin = [ ./common/darwin.nix ];
         linux  = [ ./common/linux.nix ];
       };
       # default paths for all systems
