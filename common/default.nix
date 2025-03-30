@@ -6,16 +6,19 @@
     # ./docker.nix
     # ./git.nix
     # ./kubernetes.nix
-    ./python.nix
+    # ./python.nix
     ./sec-tools.nix
     # ./zsh.nix
-    ./ssh.nix
+    # ./ssh.nix
     ./nixify.nix
     ../modules/home-manager/docker
     ../modules/home-manager/k8s
     ../modules/home-manager/zsh
+    ../modules/home-manager/ssh
     ../modules/home-manager/fonts
     ../modules/home-manager/git
+    ../modules/home-manager/dev-tools 
+
   ];
 
   home = {
@@ -58,6 +61,10 @@
   custom.git.enable = true;
   custom.git.config.gitignore_global = ../config/dotfiles/gitignore_global;
   custom.git.gh.config = "${inputs.priv-config}/common/dotfiles/config/gh/hosts.yml.sops";
+
+  custom.ssh.enable = true;
+
+  custom.dev.python.enable = true;
 
   programs = {
     home-manager.enable = true;

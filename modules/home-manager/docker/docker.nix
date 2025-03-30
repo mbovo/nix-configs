@@ -60,6 +60,11 @@
           else
             # just install docker
             [ config.custom.docker.package ];
+        # ssh for colima setup
+        programs.ssh.includes = if pkgs.system == "x86_64-darwin" || pkgs.system == "aarch64-darwin" then
+            [ "${homeDirectory}/.colima/ssh_config" ]
+          else
+            [];
     })
     (lib.mkIf config.custom.docker.extra.enable {
       home.packages = with pkgs; config.custom.docker.extra.packages;
