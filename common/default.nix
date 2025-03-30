@@ -4,7 +4,7 @@
   imports = [
     ./cli-tools.nix
     # ./docker.nix
-    ./git.nix
+    # ./git.nix
     # ./kubernetes.nix
     ./python.nix
     ./sec-tools.nix
@@ -15,6 +15,7 @@
     ../modules/home-manager/k8s
     ../modules/home-manager/zsh
     ../modules/home-manager/fonts
+    ../modules/home-manager/git
   ];
 
   home = {
@@ -53,6 +54,10 @@
   custom.atuin.key = "${inputs.priv-config}/common/dotfiles/local/share/atuin/atuin.key";
   custom.atuin.config = ../config/dotfiles/config/atuin/config.toml;
 
+
+  custom.git.enable = true;
+  custom.git.config.gitignore_global = ../config/dotfiles/gitignore_global;
+  custom.git.gh.config = "${inputs.priv-config}/common/dotfiles/config/gh/hosts.yml.sops";
 
   programs = {
     home-manager.enable = true;
