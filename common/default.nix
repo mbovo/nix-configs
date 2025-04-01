@@ -7,7 +7,7 @@
     # ./git.nix
     # ./kubernetes.nix
     # ./python.nix
-    ./sec-tools.nix
+    # ./sec-tools.nix
     # ./zsh.nix
     # ./ssh.nix
     ./nixify.nix
@@ -19,6 +19,7 @@
     ../modules/home-manager/git
     ../modules/home-manager/dev-tools 
     ../modules/home-manager/cloud-providers
+    ../modules/home-manager/sec-tools
   ];
 
   home = {
@@ -71,6 +72,8 @@
     poetry
   ];
   custom.dev.go.enable = true;
+
+  custom.secTools.enable = true;
 
   programs = {
     home-manager.enable = true;
