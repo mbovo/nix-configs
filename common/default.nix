@@ -2,7 +2,8 @@
 {
 
   imports = [
-    # ./cli-tools.nix
+    ./cli-tools.nix
+    ./darwin.nix
     ./nixify.nix
     ../modules/home-manager/cli-tools
     ../modules/home-manager/docker
