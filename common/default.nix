@@ -18,7 +18,7 @@
     ../modules/home-manager/fonts
     ../modules/home-manager/git
     ../modules/home-manager/dev-tools 
-
+    ../modules/home-manager/cloud-providers
   ];
 
   home = {
