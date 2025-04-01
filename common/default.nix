@@ -3,13 +3,6 @@
 
   imports = [
     ./cli-tools.nix
-    # ./docker.nix
-    # ./git.nix
-    # ./kubernetes.nix
-    # ./python.nix
-    # ./sec-tools.nix
-    # ./zsh.nix
-    # ./ssh.nix
     ./nixify.nix
     ../modules/home-manager/docker
     ../modules/home-manager/k8s
