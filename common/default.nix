@@ -70,6 +70,7 @@
     pipenv
     poetry
   ];
+  custom.dev.go.enable = true;
 
   programs = {
     home-manager.enable = true;
