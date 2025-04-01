@@ -22,6 +22,7 @@
         pkgs.delta
         pkgs.gh
         pkgs.gitleaks
+        pkgs.colordiff
       ];
       type = lib.types.listOf lib.types.package;
       description = "list of git packages to install";

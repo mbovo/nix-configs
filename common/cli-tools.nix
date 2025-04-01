@@ -4,36 +4,40 @@
     packages = with pkgs; [
 
       #wezterm # installed with brew since it's at system level
-      bash
-      nvd
-      nix-diff
+      # bash
+      # nvd
+      # nix-diff
 
       # GNU tools
-      colordiff
-      direnv
-      nix-direnv
-      hping
-      htop
-      iperf
-      less
-      mtr
-      tmux
+      # colordiff
+      # direnv
+      # nix-direnv
+      # hping
+      # htop
+      # iperf
+      # less
+      # mtr
+      # tmux
+
+      # gawk
+      # tree
+      # watch
 
       # Modern Tools
       asciinema
-      bat
+      # bat
       # devbox pinned to unstable
-      eza
+      # eza
       fd
-      fzf
+      # fzf
       glow
-      jq
-      neovim
-      ripgrep
-      yazi
-      yq
-      nil
-      nix-output-monitor
+      # jq
+      # neovim
+      # ripgrep
+      # yazi
+      # yq
+      # nil
+      # nix-output-monitor
     ] ++ (with pkgs.bat-extras; [ batdiff ])
     ++ 
     [ 

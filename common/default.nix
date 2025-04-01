@@ -2,8 +2,9 @@
 {
 
   imports = [
-    ./cli-tools.nix
+    # ./cli-tools.nix
     ./nixify.nix
+    ../modules/home-manager/cli-tools
     ../modules/home-manager/docker
     ../modules/home-manager/k8s
     ../modules/home-manager/zsh
@@ -67,6 +68,19 @@
   custom.dev.go.enable = true;
 
   custom.secTools.enable = true;
+
+  custom.cli.nix-utils.enable = true;
+  custom.cli.editor.enable = true;
+
+  custom.cli.direnv.enable = true;
+  custom.cli.bat.enable = true;
+  custom.cli.modern.eza.enable = true;
+  custom.cli.modern.fd.enable = true;
+  custom.cli.modern.ripgrep.enable = true;
+  custom.cli.modern.jq.enable = true;
+  custom.cli.modern.fzf.enable = true;
+  custom.cli.modern.extra.enable = true;
+  custom.cli.yazi.enable = true;
 
   programs = {
     home-manager.enable = true;
