@@ -24,14 +24,13 @@
   config = lib.mkMerge [
     (lib.mkIf config.custom.dev.python.enable {
       home.packages = [
-        config.custom.dev.python.package
-      ] ++ config.custom.dev.python.extraPackages ++ [
         (config.custom.dev.python.package.withPackages (
-          pp: [
-            pp.pyyaml
-          ]
-        ) )
-      ];
+            pp: [
+              pp.pyyaml
+            ]
+          ) 
+        )
+      ] ++ config.custom.dev.python.extraPackages;
     })
   ];
 
