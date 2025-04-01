@@ -26,7 +26,7 @@
       home.packages = [
         config.custom.dev.python.package
       ] ++ config.custom.dev.python.extraPackages ++ [
-        (pkgs.python3.withPackages (
+        (config.custom.dev.python.package.withPackages (
           pp: [
             pp.pyyaml
           ]

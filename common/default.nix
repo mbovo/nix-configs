@@ -65,6 +65,11 @@
   custom.ssh.enable = true;
 
   custom.dev.python.enable = true;
+  custom.dev.python.package = inputs.pkgs-unstable.python3;
+  custom.dev.python.extraPackages = with inputs.pkgs-unstable; [
+    pipenv
+    poetry
+  ];
 
   programs = {
     home-manager.enable = true;
