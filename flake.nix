@@ -28,23 +28,8 @@
   outputs = { home-manager,flake-utils, self, ... }@inputs:
     let
       inherit (self) outputs;
-      # defaults modules for all systems
-      mods = {
-        common = [ inputs.sops-nix.homeManagerModules.sops ./common/default.nix ];
-        darwin = [ ./common/darwin.nix ];
-        linux  = [ ./common/linux.nix ];
-      };
-      # default paths for all systems
-      paths = {
-        home = {
-          x86_64-darwin = "/Users/";
-          aarch64-darwin = "/Users/";
-          x86_64-linux = "/home/";
-          aarch64-linux = "/home/";
-        };
-      };
     in
-## building dev-shell for all 
+    ## building dev-shell for all 
     flake-utils.lib.eachDefaultSystem 
       (system:{
         devShells.default = inputs.nixpkgs-stable.legacyPackages.${system}.mkShell {
@@ -62,70 +47,10 @@
       }
     )
     //
-## home-manager configurations
+    ## home-manager configurations
     {
-      homeManagerModules = import ./modules/home-manager;
-      homeConfigurations = {
-        # ==================================================================================================================
-        # personal MacOs configuration
-        # ==================================================================================================================
-        "manuel@mbp.local" = home-manager.lib.homeManagerConfiguration rec{
-          pkgs = extraSpecialArgs.pkgs-stable; # using nixpgs-unstable as default (see below)
-          extraSpecialArgs = rec{
-            system = "x86_64-darwin";
-            username = "manuel"; 
-            hostname = "mbp";
-            homeDirectory = "${paths.home.${system}}${username}";
-            pkgs-stable = inputs.nixpkgs-stable-darwin.legacyPackages.${system};
-            pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-            # pdh = inputs.pdhpkg.packages.${system};
-            priv-config = inputs.nix-configs-priv;
-          };
-          modules = mods.common ++ mods.darwin ++ 
-          [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ]
-          ++ builtins.attrValues outputs.homeManagerModules;
-        };
-        # ==================================================================================================================
-
-        # ==================================================================================================================
-        # new work MacOs configuration
-        # ==================================================================================================================
-        "manuelbovo@M-PA-LT75QJ7NN7" = home-manager.lib.homeManagerConfiguration rec{
-          pkgs = extraSpecialArgs.pkgs-stable; # using nixpgs-stable as default (see below)
-          extraSpecialArgs = rec{
-            system = "aarch64-darwin";
-            hostname = "M-PA-LT75QJ7NN7";
-            username = "manuelbovo";
-            homeDirectory = "${paths.home.${system}}${username}";
-            pkgs-stable = inputs.nixpkgs-stable-darwin.legacyPackages.${system};
-            pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-            # pdh = inputs.pdhpkg.packages.${system};
-            priv-config = inputs.nix-configs-priv;
-          };
-          modules = mods.common ++ mods.darwin ++ 
-          [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ]
-            ++ builtins.attrValues outputs.homeManagerModules;
-        };
-        # ==================================================================================================================
-
-        # ==================================================================================================================
-        # work MacOs configuration
-        # ==================================================================================================================
-        "manuel.bovo@manuel.bovo" = home-manager.lib.homeManagerConfiguration rec{
-          pkgs = extraSpecialArgs.pkgs-stable; # using nixpgs-stable as default (see below)
-          extraSpecialArgs = rec{
-            system = "aarch64-darwin";
-            hostname = "manuel.bovo";
-            username = "${hostname}";
-            homeDirectory = "${paths.home.${system}}${username}";
-            pkgs-stable = inputs.nixpkgs-stable-darwin.legacyPackages.${system};
-            pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-            # pdh = inputs.pdhpkg.packages.${system};
-            priv-config = inputs.nix-configs-priv;
-          };
-          modules = mods.common ++ mods.darwin ++ [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ];
-        };
-        # ==================================================================================================================
-      };
+      homeManagerModules = import ./modules/home-manager;             # this is to expose modules for external access
+      homeConfigurations = import ./hosts {inherit inputs outputs;};  # include all hosts configurations
     };
 }
+
