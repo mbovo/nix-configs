@@ -5,33 +5,7 @@
     # ./cli-tools.nix
     ./darwin.nix
     ./nixify.nix
-
-    ../modules/home-manager/cli-tools
-    ../modules/home-manager/shells
-    ../modules/home-manager/ssh
-    ../modules/home-manager/fonts
-    ../modules/home-manager/git
-    ../modules/home-manager/sec-tools
-    ../modules/home-manager/dev-tools 
-
-    ../modules/home-manager/docker
-    ../modules/home-manager/k8s
-    ../modules/home-manager/cloud-providers
-
   ];
-
-  home = {
-    inherit username homeDirectory;
-    stateVersion = "23.11"; # don't change it
-    keyboard.layout = "it";
-    activation = {
-      ## Add diff changes to home-manager activation
-      diffChanges = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          PATH=$PATH:${lib.makeBinPath (with pkgs; [nvd])}
-          $DRY_RUN_CMD nvd diff $oldGenPath $newGenPath
-      '';
-    };
-  };
 
   custom.k8s.enable = true;
   custom.k8s.extra.enable = true;
@@ -92,15 +66,4 @@
   custom.cli.modern.fzf.enable = true;
   custom.cli.modern.extra.enable = true;
   
-  programs = {
-    home-manager.enable = true;
-  };
-
-  ## Configuring sops key to use
-  sops = {
-    age.keyFile = "${homeDirectory}/.config/sops/age/keys.txt";
-  };
-
-  
-
 }

@@ -30,7 +30,7 @@
       inherit (self) outputs;
       # defaults modules for all systems
       mods = {
-        common = [ inputs.sops-nix.homeManagerModules.sops ./common ];
+        common = [ inputs.sops-nix.homeManagerModules.sops ./modules/home-manager ./common/default.nix ];
         darwin = [ ./common/darwin.nix ];
         linux  = [ ./common/linux.nix ];
       };
@@ -81,8 +81,8 @@
             # pdh = inputs.pdhpkg.packages.${system};
             priv-config = inputs.nix-configs-priv;
           };
-          modules = mods.common ++ mods.darwin ++ [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ] ++ 
-          builtins.attrValues outputs.homeManagerModules;
+          modules = mods.common ++ mods.darwin ++ [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ]; #++ 
+          #builtins.attrValues outputs.homeManagerModules;
         };
         # ==================================================================================================================
 
