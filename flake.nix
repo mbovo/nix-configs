@@ -26,31 +26,19 @@
   };
 
   outputs = { home-manager,flake-utils, self, ... }@inputs:
-    let
-      inherit (self) outputs;
-    in
-    ## building dev-shell for all 
-    flake-utils.lib.eachDefaultSystem 
-      (system:{
-        devShells.default = inputs.nixpkgs-stable.legacyPackages.${system}.mkShell {
-          packages = with inputs.nixpkgs-stable.legacyPackages.${system}; [
-            statix
-            go-task
-            sops
-            nix-output-monitor
-            git
-            gh
-            age
-            nh
-          ];
-        };
-      }
-    )
-    //
-    ## home-manager configurations
+    let inherit (self) outputs; in
     {
       homeManagerModules = import ./modules/home-manager;             # this is to expose modules for external access
       homeConfigurations = import ./hosts {inherit inputs outputs;};  # include all hosts configurations
-    };
+    }
+    //
+    flake-utils.lib.eachDefaultSystem                                 # system agnostic dev shell with needed packages 
+      (system:{
+        devShells.default = inputs.nixpkgs-stable.legacyPackages.${system}.mkShell {
+          packages = with inputs.nixpkgs-stable.legacyPackages.${system}; [
+            age git gh nh nix-output-monitor sops statix
+          ];
+        };
+      });
 }
 
