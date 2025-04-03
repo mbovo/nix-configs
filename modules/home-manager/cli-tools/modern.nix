@@ -49,6 +49,11 @@
     };
     custom.cli.modern.extra.enable = lib.mkEnableOption "Enable modern extra packages";
     custom.cli.modern.extra.packages = lib.mkOption {
+      default = [];
+      type = lib.types.listOf lib.types.package;
+      description = "list of extra modern packages to install";
+    };
+    custom.cli.modern.extra.default_packages = lib.mkOption {
       default = [
         pkgs.glow
         pkgs.asciinema
@@ -56,7 +61,7 @@
         pkgs.yq
       ];
       type = lib.types.listOf lib.types.package;
-      description = "list of extra modern packages to install";
+      description = "list of default extra modern packages to install";
     };
   };
 

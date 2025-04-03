@@ -66,4 +66,5 @@
   custom.cli.modern.fzf.enable = true;
   custom.cli.modern.extra.enable = true;
   
+  custom.cli.modern.extra.packages = (lib.lists.remove pkgs.devbox config.custom.cli.modern.extra.default_packages) ++ [ inputs.pkgs-unstable.devbox ];
 }
