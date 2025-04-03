@@ -2,14 +2,8 @@
 {
 
   imports = [
-    ./cli-tools.nix
-    ./docker.nix
-    ./git.nix
-    ./kubernetes.nix
-    ./python.nix
-    ./sec-tools.nix
-    ./zsh.nix
-    ./ssh.nix
+    ./common.nix
+    ./darwin.nix
     ./nixify.nix
   ];
 
@@ -34,7 +28,5 @@
   sops = {
     age.keyFile = "${homeDirectory}/.config/sops/age/keys.txt";
   };
-
-  
 
 }
