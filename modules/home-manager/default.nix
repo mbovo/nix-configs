@@ -14,4 +14,7 @@
   shells          = import ./shells;
   ssh             = import ./ssh;
 
+  nixify         = import ./nixify;
+  brew           = import ./brew;
+  aerospace      = import ./aerospace;
 }

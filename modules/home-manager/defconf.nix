@@ -3,14 +3,11 @@
 
   imports = [
     ./common.nix
-    ./darwin.nix
-    ./nixify.nix
   ];
 
   home = {
     inherit username homeDirectory;
     stateVersion = "23.11"; # don't change it
-    keyboard.layout = "it";
     activation = {
       ## Add diff changes to home-manager activation
       diffChanges = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

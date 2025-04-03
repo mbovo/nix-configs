@@ -1,6 +1,8 @@
 { config, pkgs, username, homeDirectory, sops, lib, ... }@inputs:
 {
 
+  home.keyboard.layout = "it";
+
   custom.k8s.enable = true;
   custom.k8s.extra.enable = true;
   custom.k8s.extra.clusterctl.enable = true;
@@ -61,4 +63,15 @@
   custom.cli.modern.extra.enable = true;
   
   custom.cli.modern.extra.packages = (lib.lists.remove pkgs.devbox config.custom.cli.modern.extra.default_packages) ++ [ inputs.pkgs-unstable.devbox ];
+
+  custom.aerospace.enable = true;
+  custom.aerospace.config_file = ../../config/dotfiles/config/aerospace/aerospace.toml;
+  custom.aerospace.scratchpad_file = ../../config/scripts/scratchpad.sh;
+
+  custom.brew.enable = true;
+  custom.brew.config_file = "${inputs.priv-config}/hosts/${inputs.hostname}/dotfiles/Brewfile";
+
+  custom.nixify.enable = true;
+  custom.nixify.binary_file = ../../config/flakes/nixify;
+  custom.nixify.config_file = ../../config/flakes/venv.flake.nix;
 }
