@@ -2,7 +2,6 @@
 {
 
   imports = [
-    # ./cli-tools.nix
     ./darwin.nix
     ./nixify.nix
   ];

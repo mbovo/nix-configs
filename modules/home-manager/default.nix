@@ -1,44 +1,17 @@
-{ config, pkgs, username, homeDirectory, sops, lib, ... }@inputs:
 {
-
-  imports = [
-
-    ./cli-tools
-    ./shells
-    ./ssh
-    ./fonts
-    ./git
-    ./sec-tools
-    ./dev-tools 
-
-    ./docker
-    ./k8s
-    ./cloud-providers
-
-  ];
-
-  home = {
-    inherit username homeDirectory;
-    stateVersion = "23.11"; # don't change it
-    keyboard.layout = "it";
-    activation = {
-      ## Add diff changes to home-manager activation
-      diffChanges = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          PATH=$PATH:${lib.makeBinPath (with pkgs; [nvd])}
-          $DRY_RUN_CMD nvd diff $oldGenPath $newGenPath
-      '';
-    };
-  };
-
-  programs = {
-    home-manager.enable = true;
-  };
-
-  ## Configuring sops key to use
-  sops = {
-    age.keyFile = "${homeDirectory}/.config/sops/age/keys.txt";
-  };
-
+  # Default config
+  defconfig       = import ./defconf.nix;
   
+  # Modules
+  cli-tools       = import ./cli-tools;
+  cloud-providers = import ./cloud-providers;
+  dev-tools       = import ./dev-tools;
+  docker          = import ./docker;
+  fonts           = import ./fonts;
+  git             = import ./git;
+  k8s             = import ./k8s;
+  sec-tools       = import ./sec-tools;
+  shells          = import ./shells;
+  ssh             = import ./ssh;
 
 }
