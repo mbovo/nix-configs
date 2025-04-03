@@ -2,7 +2,7 @@
 {
 
   imports = [
-    ./cli-tools.nix
+    # ./cli-tools.nix
     ./darwin.nix
     ./nixify.nix
 
@@ -79,6 +79,7 @@
   custom.cli.editor.enable = true;
   custom.cli.gnu.enable = true;
   custom.cli.network.enable = true;
+  custom.cli.network.tmux.config_file = ../config/dotfiles/tmux.conf;
   custom.cli.nix-utils.enable = true;  
   
 

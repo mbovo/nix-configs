@@ -18,13 +18,20 @@ options = {
     type = lib.types.listOf lib.types.package;
     description = "list of network tools to install";
   };
+  custom.cli.network.tmux.config_file = lib.mkOption {
+    default = null;
+    type = lib.types.nullOr lib.types.path;
+    description = "Path to the tmux config file";
+  };
 };
 
 config = lib.mkMerge [
   (lib.mkIf config.custom.cli.network.enable {
     home.packages = config.custom.cli.network.packages;
-    file = {
-      ".tmux.conf".source = ../../../config/dotfiles/tmux.conf;
+  })
+  (lib.mkIf (config.custom.cli.network.tmux.config_file != null) {
+    home.file = {
+      ".tmux.conf".source = config.custom.cli.network.tmux.config_file;
     };
   })
 ];
