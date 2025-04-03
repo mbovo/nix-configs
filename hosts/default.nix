@@ -14,16 +14,28 @@ in
 
 
     # ==================================================================================================================
-    # new work MacOs configuration
+    # work MacOs configuration
     # ==================================================================================================================
     "manuelbovo@M-PA-LT75QJ7NN7" = inputs.home-manager.lib.homeManagerConfiguration (
-      import ./M-PA-LT75QJ7NN7.nix {inherit inputs outputs paths;}
+       import ./generic-host.nix {
+        system = "aarch64-darwin";
+        hostname = "M-PA-LT75QJ7NN7";
+        username = "manuelbovo";
+        usepkgs = inputs.nixpkgs-stable-darwin;
+        inherit inputs outputs paths;
+      }
     );
 
-    # # ==================================================================================================================
-    # # personal MacOs configuration
-    # # ==================================================================================================================
+    # ==================================================================================================================
+    # personal MacOs configuration
+    # ==================================================================================================================
     "manuel@mbp.local" = inputs.home-manager.lib.homeManagerConfiguration (
-      import ./mbp.local.nix {inherit inputs outputs paths;}
+      import ./generic-host.nix {
+        system = "x86_64-darwin";
+        hostname = "mbp";
+        username = "manuel";
+        usepkgs = inputs.nixpkgs-stable-darwin;
+        inherit inputs outputs paths;
+      }
     );
 }
