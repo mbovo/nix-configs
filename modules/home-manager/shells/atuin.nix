@@ -2,23 +2,6 @@
 {
 
   options = {
-    custom.zsh.enable = lib.mkEnableOption "Enable custom zsh configuration";
-    custom.zsh.packages = lib.mkOption {
-      type = lib.types.listOf lib.types.package;
-      default = [
-        pkgs.zsh
-        pkgs.oh-my-zsh
-        pkgs.zsh-powerlevel10k
-        pkgs.atuin
-      ];
-      description = "List of custom zsh packages to install.";
-    };
-
-    custom.zsh.extra.files = lib.mkOption {
-      type = lib.types.attrsOf lib.types.path;
-      default = {};
-      description = "List of extra configuration files to linkto the home directory.";
-    };
 
     ## atuin
 
@@ -43,22 +26,13 @@
 
 
   config = lib.mkMerge [
-    (lib.mkIf config.custom.zsh.enable {
-      home.packages = config.custom.zsh.packages;
-    })
-    (lib.mkIf (config.custom.zsh.extra.files != {}) {
-      home.file = lib.genAttrs (builtins.attrNames config.custom.zsh.extra.files) (name: {
-        source = config.custom.zsh.extra.files.${name};
-      });
-    })
-
     (lib.mkIf config.custom.atuin.enable {
       home.packages = [ config.custom.atuin.package ];
       home.activation = {
       ## Install atuin startup script
         atuinsetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             PATH=$PATH:${lib.makeBinPath (with pkgs; [atuin])}
-            $DRY_RUN_CMD atuin init zsh > ${homeDirectory}/.atuin.zsh
+            $DRY_RUN_CMD atuin init zsh --disable-up-arrow > ${homeDirectory}/.atuin.zsh
         '';
       };
 

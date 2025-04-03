@@ -5,16 +5,19 @@
     ./cli-tools.nix
     ./darwin.nix
     ./nixify.nix
+
     ../modules/home-manager/cli-tools
-    ../modules/home-manager/docker
-    ../modules/home-manager/k8s
-    ../modules/home-manager/zsh
+    ../modules/home-manager/shells
     ../modules/home-manager/ssh
     ../modules/home-manager/fonts
     ../modules/home-manager/git
-    ../modules/home-manager/dev-tools 
-    ../modules/home-manager/cloud-providers
     ../modules/home-manager/sec-tools
+    ../modules/home-manager/dev-tools 
+
+    ../modules/home-manager/docker
+    ../modules/home-manager/k8s
+    ../modules/home-manager/cloud-providers
+
   ];
 
   home = {
