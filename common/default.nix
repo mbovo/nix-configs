@@ -44,18 +44,20 @@
 
   custom.fonts.nerdFonts.enable = true;  
 
-  custom.zsh.enable = true;
-  custom.zsh.extra.files = {
+  custom.shells.zsh.enable = true;
+  custom.shells.zsh.extra.files = {
       ".zshrc" = ../config/dotfiles/zshrc;
       ".zsh_alias" = ../config/dotfiles/zsh_alias;
       ".zsh_funx" = ../config/dotfiles/zsh_funx;
       ".p10k.zsh" = ../config/dotfiles/p10k.zsh;
       ".config/atuin/config.toml" = ../config/dotfiles/config/atuin/config.toml;
   };
-  custom.atuin.enable = true;
-  custom.atuin.key = "${inputs.priv-config}/common/dotfiles/local/share/atuin/atuin.key";
-  custom.atuin.config = ../config/dotfiles/config/atuin/config.toml;
+  custom.shells.atuin.enable = true;
+  custom.shells.atuin.key = "${inputs.priv-config}/common/dotfiles/local/share/atuin/atuin.key";
+  custom.shells.atuin.config = ../config/dotfiles/config/atuin/config.toml;
 
+  custom.shells.wezterm.enable = false;
+  custom.shells.wezterm.config_file = ../config/dotfiles/wezterm.lua;
 
   custom.git.enable = true;
   custom.git.config.gitignore_global = ../config/dotfiles/gitignore_global;
@@ -73,19 +75,22 @@
 
   custom.secTools.enable = true;
 
-  custom.cli.nix-utils.enable = true;
-  custom.cli.editor.enable = true;
-
   custom.cli.direnv.enable = true;
-  custom.cli.bat.enable = true;
+  custom.cli.editor.enable = true;
+  custom.cli.gnu.enable = true;
+  custom.cli.network.enable = true;
+  custom.cli.nix-utils.enable = true;  
+  
+
+  custom.cli.modern.bat.enable = true;
+  custom.cli.modern.yazi.enable = true;
   custom.cli.modern.eza.enable = true;
   custom.cli.modern.fd.enable = true;
   custom.cli.modern.ripgrep.enable = true;
   custom.cli.modern.jq.enable = true;
   custom.cli.modern.fzf.enable = true;
   custom.cli.modern.extra.enable = true;
-  custom.cli.yazi.enable = true;
-
+  
   programs = {
     home-manager.enable = true;
   };

@@ -2,8 +2,8 @@
 {
 
   imports = [
-    ./bat.nix
-    ./yazi.nix
+    ./modern/bat.nix
+    ./modern/yazi.nix
   ];
 
   options = {

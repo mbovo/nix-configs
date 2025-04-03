@@ -2,18 +2,18 @@
 {
 
   options = {
-    custom.cli.bat.enable = lib.mkEnableOption "Enable custom bat";
-    custom.cli.bat.package = lib.mkOption {
+    custom.cli.modern.bat.enable = lib.mkEnableOption "Enable custom bat";
+    custom.cli.modern.bat.package = lib.mkOption {
       default = pkgs.bat;
       type = lib.types.package;
       description = "bat packages to install";
     };
-    custom.cli.bat.theme = lib.mkOption {
+    custom.cli.modern.bat.theme = lib.mkOption {
       default = "Monokai Extended";
       type = lib.types.str;
       description = "bat theme to use";
     };
-    custom.cli.bat.extra.packages = lib.mkOption {
+    custom.cli.modern.bat.extra.packages = lib.mkOption {
       default = [
         pkgs.bat-extras.batdiff
       ];
@@ -23,13 +23,13 @@
   };
 
   config = lib.mkMerge [
-    (lib.mkIf config.custom.cli.bat.enable {
-      home.packages = config.custom.cli.bat.extra.packages;
+    (lib.mkIf config.custom.cli.modern.bat.enable {
+      home.packages = config.custom.cli.modern.bat.extra.packages;
       programs.bat = {
-        package = config.custom.cli.bat.package;
+        package = config.custom.cli.modern.bat.package;
         enable = true;
         config = {
-          theme = config.custom.cli.bat.theme;
+          theme = config.custom.cli.modern.bat.theme;
         };
       };
     })

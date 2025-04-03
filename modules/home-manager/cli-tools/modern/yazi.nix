@@ -2,8 +2,8 @@
 {
 
   options = {
-    custom.cli.yazi.enable = lib.mkEnableOption "Enable custom yazi";
-    custom.cli.yazi.package = lib.mkOption {
+    custom.cli.modern.yazi.enable = lib.mkEnableOption "Enable custom yazi";
+    custom.cli.modern.yazi.package = lib.mkOption {
       default = pkgs.yazi;
       type = lib.types.package;
       description = "yazi packages to install";
@@ -11,10 +11,10 @@
   };
 
   config = lib.mkMerge [
-    (lib.mkIf config.custom.cli.yazi.enable {
+    (lib.mkIf config.custom.cli.modern.yazi.enable {
       programs.yazi = {
         enable = true;
-        package = config.custom.cli.yazi.package;
+        package = config.custom.cli.modern.yazi.package;
         enableZshIntegration = true;
         settings = {
           log = {

@@ -14,7 +14,6 @@
     };
     custom.cli.gnu.darwin.packages = lib.mkOption {
       default = [
-        pkgs.bash
         pkgs.gawk
         pkgs.watch
         pkgs.wget

@@ -4,10 +4,10 @@
   home = {
     packages = with pkgs; [
       # GNU tools
-      gawk
-      tree
-      watch
-      wget
+      # gawk
+      # tree
+      # watch
+      # wget
 
       # Currently installed with
       #yabai

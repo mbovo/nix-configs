@@ -20,4 +20,13 @@ options = {
   };
 };
 
+config = lib.mkMerge [
+  (lib.mkIf config.custom.cli.network.enable {
+    home.packages = config.custom.cli.network.packages;
+    file = {
+      ".tmux.conf".source = ../../../config/dotfiles/tmux.conf;
+    };
+  })
+];
+
 }
