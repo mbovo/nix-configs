@@ -1,10 +1,8 @@
-{paths, inputs, outputs, ...}@args:
+{paths, inputs, outputs, system, hostname, username, ...}@args:
 rec{
     pkgs = extraSpecialArgs.pkgs-stable; # using nixpgs-stable as default (see below)
     extraSpecialArgs = rec{
-      system = "x86_64-darwin";
-      hostname = "mbp";
-      username = "manuel";
+      inherit system hostname username;
       homeDirectory = "${paths.home.${system}}${username}";
       pkgs-stable = inputs.nixpkgs-stable-darwin.legacyPackages.${system};
       pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
@@ -13,6 +11,6 @@ rec{
     };
     modules = [
       inputs.sops-nix.homeManagerModules.sops
-      "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" 
+      "${extraSpecialArgs.priv-config}/hosts/${hostname}/nix/custom.nix" 
       ] ++ builtins.attrValues outputs.homeManagerModules;
 }
