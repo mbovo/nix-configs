@@ -1,4 +1,4 @@
-{paths, mods, inputs, outputs, ...}@args:
+{paths, inputs, outputs, ...}@args:
 rec{
     pkgs = extraSpecialArgs.pkgs-stable; # using nixpgs-stable as default (see below)
     extraSpecialArgs = rec{
@@ -11,7 +11,8 @@ rec{
       # pdh = inputs.pdhpkg.packages.${system};
       priv-config = inputs.nix-configs-priv;
     };
-    modules = mods.common ++ mods.darwin ++ 
-    [ "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" ]
-      ++ builtins.attrValues outputs.homeManagerModules;
+    modules = [
+      inputs.sops-nix.homeManagerModules.sops
+      "${extraSpecialArgs.priv-config}/hosts/${extraSpecialArgs.hostname}/nix/custom.nix" 
+      ] ++ builtins.attrValues outputs.homeManagerModules;
 }

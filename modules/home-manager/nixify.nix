@@ -4,10 +4,10 @@
   home = {
     file = {
       "bin/nixify" = { 
-        source = ../config/flakes/nixify;
+        source = ../../config/flakes/nixify;
         executable = true;
       };
-      "bin/flake_venv/flake.nix".source = ../config/flakes/venv.flake.nix;
+      "bin/flake_venv/flake.nix".source = ../../config/flakes/venv.flake.nix;
     };
   };
 

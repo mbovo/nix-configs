@@ -1,11 +1,6 @@
 { config, pkgs, username, homeDirectory, sops, lib, ... }@inputs:
 {
 
-  imports = [
-    ./darwin.nix
-    ./nixify.nix
-  ];
-
   custom.k8s.enable = true;
   custom.k8s.extra.enable = true;
   custom.k8s.extra.clusterctl.enable = true;
@@ -19,21 +14,21 @@
 
   custom.shells.zsh.enable = true;
   custom.shells.zsh.extra.files = {
-      ".zshrc" = ../config/dotfiles/zshrc;
-      ".zsh_alias" = ../config/dotfiles/zsh_alias;
-      ".zsh_funx" = ../config/dotfiles/zsh_funx;
-      ".p10k.zsh" = ../config/dotfiles/p10k.zsh;
-      ".config/atuin/config.toml" = ../config/dotfiles/config/atuin/config.toml;
+      ".zshrc" = ../../config/dotfiles/zshrc;
+      ".zsh_alias" = ../../config/dotfiles/zsh_alias;
+      ".zsh_funx" = ../../config/dotfiles/zsh_funx;
+      ".p10k.zsh" = ../../config/dotfiles/p10k.zsh;
+      ".config/atuin/config.toml" = ../../config/dotfiles/config/atuin/config.toml;
   };
   custom.shells.atuin.enable = true;
   custom.shells.atuin.key = "${inputs.priv-config}/common/dotfiles/local/share/atuin/atuin.key";
-  custom.shells.atuin.config = ../config/dotfiles/config/atuin/config.toml;
+  custom.shells.atuin.config = ../../config/dotfiles/config/atuin/config.toml;
 
   custom.shells.wezterm.enable = false;
-  custom.shells.wezterm.config_file = ../config/dotfiles/wezterm.lua;
+  custom.shells.wezterm.config_file = ../../config/dotfiles/wezterm.lua;
 
   custom.git.enable = true;
-  custom.git.config.gitignore_global = ../config/dotfiles/gitignore_global;
+  custom.git.config.gitignore_global = ../../config/dotfiles/gitignore_global;
   custom.git.gh.config = "${inputs.priv-config}/common/dotfiles/config/gh/hosts.yml.sops";
 
   custom.ssh.enable = true;
@@ -52,7 +47,7 @@
   custom.cli.editor.enable = true;
   custom.cli.gnu.enable = true;
   custom.cli.network.enable = true;
-  custom.cli.network.tmux.config_file = ../config/dotfiles/tmux.conf;
+  custom.cli.network.tmux.config_file = ../../config/dotfiles/tmux.conf;
   custom.cli.nix-utils.enable = true;  
   
 

@@ -1,5 +1,12 @@
 { config, pkgs, username, homeDirectory, sops, lib, ... }@inputs:
 {
+
+  imports = [
+    ./common.nix
+    ./darwin.nix
+    ./nixify.nix
+  ];
+
   home = {
     inherit username homeDirectory;
     stateVersion = "23.11"; # don't change it
