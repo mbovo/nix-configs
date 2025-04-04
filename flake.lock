@@ -44,16 +44,15 @@
       "locked": {
         "lastModified": 1743686970,
         "narHash": "sha256-nso2kxkgwwcE2yVdod1raE+BIMkWDNQfHEadeH5eGsw=",
-        "ref": "main",
+        "ref": "refs/heads/main",
         "rev": "e1b0f314879d51497f4eefe87427c9b4383041a9",
         "revCount": 51,
         "type": "git",
-        "url": "ssh://git@github.com/mbovo/nix-configs-priv"
+        "url": "file:///Users/manuelbovo/oss/nix-configs-priv"
       },
       "original": {
-        "ref": "main",
         "type": "git",
-        "url": "ssh://git@github.com/mbovo/nix-configs-priv"
+        "url": "file:///Users/manuelbovo/oss/nix-configs-priv"
       }
     },
     "nixpkgs-stable": {

@@ -19,8 +19,8 @@
     # pdhpkg.url = "github:mbovo/pdh";
     
     nix-configs-priv = {
-      url = "git+ssh://git@github.com/mbovo/nix-configs-priv?ref=main";
-      #url = "git+file:///Users/manuelbovo/oss/nix-configs-priv";
+      #url = "git+ssh://git@github.com/mbovo/nix-configs-priv?ref=main";
+      url = "git+file:///Users/manuelbovo/oss/nix-configs-priv";
       flake = false;
     };
   };

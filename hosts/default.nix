@@ -2,11 +2,11 @@
 let 
   # default paths for all systems
   paths = {
-    home = {
+    home = rec {
       x86_64-darwin = "/Users/";
-      aarch64-darwin = "/Users/";
+      aarch64-darwin = x86_64-darwin;
       x86_64-linux = "/home/";
-      aarch64-linux = "/home/";
+      aarch64-linux = x86_64-linux;
     };
   };
 in
