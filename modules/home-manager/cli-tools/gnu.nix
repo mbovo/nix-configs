@@ -18,6 +18,7 @@
         pkgs.watch
         pkgs.wget
         pkgs.less
+        pkgs.which
       ];
       type = lib.types.listOf lib.types.package;
       description = "list of gnu packages to install";

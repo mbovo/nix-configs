@@ -11,6 +11,6 @@ rec{
     };
     modules = [
       inputs.sops-nix.homeManagerModules.sops
-      "${extraSpecialArgs.priv-config}/hosts/${hostname}/nix/custom.nix" 
+      "${extraSpecialArgs.priv-config}/hosts/${hostname}" 
       ] ++ builtins.attrValues outputs.homeManagerModules;
 }
