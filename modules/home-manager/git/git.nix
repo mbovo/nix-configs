@@ -10,6 +10,14 @@
       description = "git package to install";
     };
 
+    custom.git.extraConfig = {
+      signingKey = lib.mkOption {
+        default = "~/.ssh/id_ed25519.pub";
+        type = lib.types.str;
+        description = "gpg signing key";
+      };
+    };
+
     custom.git.extra.enable = lib.mkOption {
       default = config.custom.git.enable;
       type = lib.types.bool;
@@ -45,6 +53,12 @@
       description = "git user email";
     };
 
+    custom.git.gh.enable = lib.mkOption {
+      default = config.custom.git.enable;
+      type = lib.types.bool;
+      description = "Enable gh package";
+    };
+
     custom.git.gh.package = lib.mkOption {
       default = pkgs.gh;
       type = lib.types.package;
@@ -57,6 +71,22 @@
       description = "path to the gh config file (if any)";
     };
 
+    custom.git.gh.settings = lib.mkOption {
+      default =  {
+            git_protocol = "ssh";
+            pager = ""; # use env vars
+            editor = ""; # use env vars
+            aliases = {
+              co = "!id=\"$(gh pr list -L100 | fzf | cut -f1)\"; [ -n \"$id\" ] && gh pr checkout \"$id\"";
+              pl = "pr list";
+              pv = "pr view";
+              pw = "pr view --web";
+            };
+          };
+      type = lib.types.attrs;
+      description = "gh settings";
+    };
+
   };
 
   config = lib.mkMerge [
@@ -65,6 +95,7 @@
 
       programs.git = {
             enable = true;
+            package = config.custom.git.package;
             userName = config.custom.git.config.username;
             userEmail = config.custom.git.config.email;
             aliases = {
@@ -74,7 +105,7 @@
             };
             extraConfig = {
               user = {
-                signingKey = "~/.ssh/id_ed25519.pub";
+                signingKey = config.custom.git.extraConfig.signingKey;
               };
               commit = {
                 gpgSign = "true";
@@ -152,22 +183,13 @@
     })
     (lib.mkIf config.custom.git.extra.enable {
       home.packages = config.custom.git.extra.packages;
-
+    })
+    (lib.mkIf config.custom.git.gh.enable {
       programs = {
         gh = {
-          enable = true;
+          enable = config.custom.git.gh.enable;
           package = config.custom.git.gh.package;
-          settings = {
-            git_protocol = "ssh";
-            pager = ""; # use env vars
-            editor = ""; # use env vars
-            aliases = {
-              co = "!id=\"$(gh pr list -L100 | fzf | cut -f1)\"; [ -n \"$id\" ] && gh pr checkout \"$id\"";
-              pl = "pr list";
-              pv = "pr view";
-              pw = "pr view --web";
-            };
-          };
+          settings = config.custom.git.gh.settings;
         };
       };
 
