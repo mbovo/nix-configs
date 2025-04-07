@@ -14,8 +14,6 @@
           PATH=$PATH:${lib.makeBinPath (with pkgs; [nvd nix-diff])}
           verboseEcho "Diff packages [nvd]"
           run nvd diff $oldGenPath $newGenPath
-          verboseEcho "Diff files [nix-diff]"
-          run nix-diff --context 3 --line-oriented --skip-already-compared $oldGenPath $newGenPath
       '';
     };
   };

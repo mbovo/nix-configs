@@ -36,8 +36,11 @@
       (system:{
         devShells.default = inputs.nixpkgs-stable.legacyPackages.${system}.mkShell {
           packages = with inputs.nixpkgs-stable.legacyPackages.${system}; [
-            age git gh nh nix-output-monitor sops statix
+            age git gh nh nix-diff nix-output-monitor nvd sops statix
           ];
+          env = {
+            NH_DIFF_PROVIDER="nix-diff --context 3 --line-oriented --skip-already-compared";
+          };
         };
       });
 }
