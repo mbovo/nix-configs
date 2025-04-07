@@ -11,8 +11,9 @@
     activation = {
       ## Add diff changes to home-manager activation
       diffChanges = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          PATH=$PATH:${lib.makeBinPath (with pkgs; [nvd])}
+          PATH=$PATH:${lib.makeBinPath (with pkgs; [nvd nix-diff])}
           $DRY_RUN_CMD nvd diff $oldGenPath $newGenPath
+          $DRY_RUN_CMD nix-diff --character-oriented --skip-already-compared $oldGenPath $newGenPath
       '';
     };
   };
