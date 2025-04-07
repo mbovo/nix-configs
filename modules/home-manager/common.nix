@@ -30,8 +30,13 @@
   custom.shells.wezterm.config_file = ../../config/dotfiles/wezterm.lua;
 
   custom.git.enable = true;
+  custom.git.config.username = "Manuel Bovo";
+  custom.git.config.email = "manuel.bovo@gmail.com";
+
   custom.git.config.gitignore_global = ../../config/dotfiles/gitignore_global;
+
   custom.git.gh.config = "${inputs.priv-config}/common/dotfiles/config/gh/hosts.yml.sops";
+  custom.git.gh.package = inputs.pkgs-unstable.gh;
 
   custom.ssh.enable = true;
 

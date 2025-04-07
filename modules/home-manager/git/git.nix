@@ -20,7 +20,6 @@
       default = [
         pkgs.act
         pkgs.delta
-        pkgs.gh
         pkgs.gitleaks
         pkgs.colordiff
       ];
@@ -35,15 +34,21 @@
     };
 
     custom.git.config.username = lib.mkOption {
-      default = "Manuel Bovo";
+      default = "User Name";
       type = lib.types.str;
       description = "git user name";
     };
 
     custom.git.config.email = lib.mkOption {
-      default = "manuel.bovo@gmail.com";
+      default = "user@email.tld";
       type = lib.types.str;
       description = "git user email";
+    };
+
+    custom.git.gh.package = lib.mkOption {
+      default = pkgs.gh;
+      type = lib.types.package;
+      description = "gh package to install";
     };
 
     custom.git.gh.config = lib.mkOption {
@@ -151,6 +156,7 @@
       programs = {
         gh = {
           enable = true;
+          package = config.custom.git.gh.package;
           settings = {
             git_protocol = "ssh";
             pager = ""; # use env vars
