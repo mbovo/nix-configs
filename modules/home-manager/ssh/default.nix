@@ -3,6 +3,11 @@
 
   options = {
     custom.ssh.enable = lib.mkEnableOption "Enable custom ssh configuration";
+    custom.ssh.matchBlocks = lib.mkOption {
+      type = lib.types.attrs;
+      default = {};
+      description = "SSH match blocks for custom ssh configuration";
+    };
   };
 
   config = lib.mkMerge [
@@ -16,12 +21,7 @@
                   PubkeyAcceptedKeyTypes = "+ssh-rsa";
                   HostKeyAlgorithms = "+ssh-rsa";
                 };
-            matchBlocks = {
-              "*.i.zroot.org" = {
-                forwardAgent = true;
-                forwardX11 = true;
-              };
-            };
+            matchBlocks = config.custom.ssh.matchBlocks;
           };
         };
     })
