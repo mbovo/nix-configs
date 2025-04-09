@@ -16,7 +16,25 @@ Dotfiles and secrets are sops-encryted and stored in a private repository.
 4. Generate age key for this host ```age-keygen -o ~/.config/sops/age/keys.txt```
 5. Add the public key to sops config of the private repository and re-encrypt everything/prepare the secrets for this host
 6. Run `gh auth login` to authenticate with GitHub and create a private key for the host
-7. Run `home-manager` (`nh home switch`) to apply the configuration
+7. Create a file `~/hosts/$(hostname).nix` with the following content:
+    ```nix
+    { config, pkgs, username, homeDirectory, sops, lib, ... }@inputs:
+    {
+      # common configurations, if you don't want to use them, remove the import but you'll need to 
+      # define at least the following:
+      # # home = {
+      # #   inherit username homeDirectory;
+        
+      # #   keyboard.layout = "it";
+      # #   stateVersion = "23.11";
+      # # }
+      imports = [
+        ./common.nix
+      ];
+    }
+    ```
+8. Run `home-manager` (`nh home build`) to verify the configuration
+9. If everything is ok, run `nh home switch .` to apply the configuration
 
 ## Keep it update
 

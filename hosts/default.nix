@@ -22,6 +22,7 @@ in
         hostname = "M-PA-LT75QJ7NN7";
         username = "manuelbovo";
         usepkgs = inputs.nixpkgs-stable-darwin;
+        lib = inputs.nixpkgs-stable-darwin.lib;
         inherit inputs outputs self paths;
       }
     );
@@ -35,6 +36,7 @@ in
         hostname = "mbp";
         username = "manuel";
         usepkgs = inputs.nixpkgs-stable-darwin;
+        lib = inputs.nixpkgs-stable-darwin.lib;
         inherit inputs outputs self paths;
       }
     );
