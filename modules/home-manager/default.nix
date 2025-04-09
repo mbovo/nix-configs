@@ -1,7 +1,4 @@
 {
-  # Default config
-  defconfig       = import ./defconf.nix;
-  
   # Modules
   cli-tools       = import ./cli-tools;
   cloud-providers = import ./cloud-providers;

@@ -12,7 +12,7 @@ rec{
     modules = builtins.attrValues outputs.homeManagerModules ++ 
       [
         inputs.sops-nix.homeManagerModules.sops                 # sops-nix module
-        "${self}/hosts/${hostname}.nix"                    # host specific configurations
+        "${self}/hosts/${hostname}.nix"                         # host specific configurations
         "${extraSpecialArgs.priv-config}/hosts/${hostname}"     # host specific private configurations
       ]; 
 }
