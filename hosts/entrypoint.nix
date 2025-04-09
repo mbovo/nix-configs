@@ -1,4 +1,4 @@
-{paths, inputs, outputs, system, hostname, username,usepkgs, ...}@args:
+{inputs, outputs, self, system, hostname, username, usepkgs, paths, ...}@args:
 rec{
     pkgs = extraSpecialArgs.pkgs-stable; # using nixpgs-stable as default (see below)
     extraSpecialArgs = rec{
@@ -9,8 +9,10 @@ rec{
       # pdh = inputs.pdhpkg.packages.${system};
       priv-config = inputs.nix-configs-priv;
     };
-    modules = [
-      inputs.sops-nix.homeManagerModules.sops
-      "${extraSpecialArgs.priv-config}/hosts/${hostname}" 
-      ] ++ builtins.attrValues outputs.homeManagerModules;
+    modules = builtins.attrValues outputs.homeManagerModules ++ 
+      [
+        inputs.sops-nix.homeManagerModules.sops                 # sops-nix module
+        "${self}/hosts/${hostname}.nix"                    # host specific configurations
+        "${extraSpecialArgs.priv-config}/hosts/${hostname}"     # host specific private configurations
+      ]; 
 }

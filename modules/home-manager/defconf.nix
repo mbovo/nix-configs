@@ -1,10 +1,6 @@
 { config, pkgs, username, homeDirectory, sops, lib, ... }@inputs:
 {
 
-  imports = [
-    ./common.nix
-  ];
-
   home = {
     inherit username homeDirectory;
     stateVersion = "23.11"; # don't change it

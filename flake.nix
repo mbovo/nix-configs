@@ -29,7 +29,7 @@
     let inherit (self) outputs; in
     {
       homeManagerModules = import ./modules/home-manager;             # this is to expose modules for external access
-      homeConfigurations = import ./hosts {inherit inputs outputs;};  # include all hosts configurations
+      homeConfigurations = import ./hosts {inherit inputs outputs self;};  # include all hosts configurations
     }
     //
     flake-utils.lib.eachDefaultSystem                                 # system agnostic dev shell with needed packages 

@@ -14,7 +14,7 @@
       description = "Path to the nixify binary";
     };
     custom.nixify.config_files = lib.mkOption {
-      type = lib.types.attrsOf lib.types.path;
+      type = lib.types.nullOr (lib.types.attrsOf lib.types.path);
       default = null;
       description = "List of paths to the nix flake for nixify";
     };
