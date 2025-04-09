@@ -78,5 +78,8 @@
 
   custom.nixify.enable = true;
   custom.nixify.binary_file = ../../config/flakes/nixify;
-  custom.nixify.config_file = ../../config/flakes/venv.flake.nix;
+  custom.nixify.config_files = {
+    "bin/flake_venv/flake.nix" = ../../config/flakes/venv.nix;
+    "bin/flake_helm/flake.nix" = ../../config/flakes/helm.nix;
+  };
 }

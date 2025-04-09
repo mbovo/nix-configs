@@ -13,22 +13,27 @@
       default = null;
       description = "Path to the nixify binary";
     };
-    custom.nixify.config_file = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
+    custom.nixify.config_files = lib.mkOption {
+      type = lib.types.attrsOf lib.types.path;
       default = null;
-      description = "Path to the nixify config";
+      description = "List of paths to the nix flake for nixify";
     };
   };
 
-  config = lib.mkIf config.custom.nixify.enable {
-    home = {
-      file = {
-        "bin/nixify" = { 
+  config = lib.mkMerge [ 
+    (lib.mkIf config.custom.nixify.enable {
+      home.file = { "bin/nixify" = { 
           source = config.custom.nixify.binary_file;
           executable = true;
+          };
         };
-        "bin/flake_venv/flake.nix".source = config.custom.nixify.config_file;
-      };
-    };
-  };
+    })
+
+    (lib.mkIf (config.custom.nixify.config_files != null) {
+      home.file = lib.genAttrs (builtins.attrNames config.custom.nixify.config_files) (name: {
+            source = config.custom.nixify.config_files.${name};
+          });
+    })
+  ];
+
 }
