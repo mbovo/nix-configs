@@ -3,5 +3,5 @@
 | Option | Description | Type | Default |
 |--------|-------------|------|---------|
 | `custom.aerospace.enable` |  | bool | false |
-| `custom.aerospace.config_file` |  | nullOr | null |
-| `custom.aerospace.scratchpad_file` |  | nullOr | null |
+| `custom.aerospace.config_file` |  | nullOr path| null |
+| `custom.aerospace.scratchpad_file` |  | nullOr path | null |

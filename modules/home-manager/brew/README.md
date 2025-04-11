@@ -3,4 +3,4 @@
 | Option | Description | Type | Default |
 |--------|-------------|------|---------|
 | `custom.brew.enable` |  | bool | false |
-| `custom.brew.config_file` |  | nullOr | null |
+| `custom.brew.config_file` |  | nullOr path| null |

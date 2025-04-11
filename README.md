@@ -45,3 +45,7 @@ nh home build .
 # If there are no errors
 nh home switch .
 ```
+
+### Custpm home-manager options
+
+See [README.md](./modules/home-manager/README.md) for a list of custom options.

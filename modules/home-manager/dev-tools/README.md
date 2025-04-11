@@ -3,4 +3,4 @@
 | Option | Description | Type | Default |
 |--------|-------------|------|---------|
 | `custom.dev.go.package` |  | package | pkgs.go |
-| `custom.dev.go.extraPackages` |  | listOf | [] |
+| `custom.dev.go.extraPackages` |  | listOf package| [] |

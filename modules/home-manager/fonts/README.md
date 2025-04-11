@@ -2,4 +2,4 @@
 
 | Option | Description | Type | Default |
 |--------|-------------|------|---------|
-| `custom.fonts.nerdFonts.fonts` |  | listOf | [ "FiraCode" "Hack" ] |
+| `custom.fonts.nerdFonts.fonts` |  | listOf str | [ "FiraCode" "Hack" ] |
