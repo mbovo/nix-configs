@@ -54,9 +54,6 @@
       config.username = "Manuel Bovo";
       config.email = "manuel.bovo@gmail.com";
       config.gitignore_global = ../config/dotfiles/gitignore_global;
-
-      gh.config = "${inputs.priv-config}/common/dotfiles/config/gh/hosts.yml.sops";
-      gh.package = inputs.pkgs-unstable.gh;
     };
 
     secTools.enable = true;

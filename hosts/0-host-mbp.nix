@@ -41,6 +41,8 @@
       config.file = "${inputs.priv-config}/common/dotfiles/docker/config.json.sops";
     };
 
+    git.gh.package = inputs.pkgs-unstable.gh;
+
     k8s = {
       enable = true;
       extra.enable = true;

@@ -65,12 +65,6 @@
       description = "gh package to install";
     };
 
-    custom.git.gh.config = lib.mkOption {
-      default = null;
-      type = lib.types.nullOr lib.types.path;
-      description = "path to the gh config file (if any)";
-    };
-
     custom.git.gh.settings = lib.mkOption {
       default =  {
             git_protocol = "ssh";
@@ -197,13 +191,6 @@
     (lib.mkIf (config.custom.git.config.gitignore_global != null) {
       home.file = {
         ".gitignore_global".source = config.custom.git.config.gitignore_global;
-      };
-    })
-    (lib.mkIf (config.custom.git.gh.config != null) {
-      sops.secrets.gh = {
-        format = "binary";
-        sopsFile = config.custom.git.gh.config;
-        path = "${inputs.homeDirectory}/.config/gh/hosts.yml";
       };
     })
   ];
