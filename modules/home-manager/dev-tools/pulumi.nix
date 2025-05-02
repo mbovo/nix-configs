@@ -26,7 +26,7 @@
     (lib.mkIf config.custom.dev.pulumi.enable {
       home.packages = [
         config.custom.dev.pulumi.package
-      ] ++ config.custom.dev.python.extraPackages;
+      ] ++ config.custom.dev.pulumi.extraPackages;
     })
   ];
 
