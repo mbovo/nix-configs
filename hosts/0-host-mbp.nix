@@ -37,9 +37,9 @@ in
     # using python from pkgs-unstable
     dev = {
       pulumi.enable = true;
-      pulumi.package = pkgs_pulumi_latest.pulumi;
+      pulumi.package = inputs.pkgs-unstable.pulumi;
       pulumi.extraPackages = [
-        pkgs_pulumi_latest.pulumiPackages.pulumi-language-python
+        inputs.pkgs-unstable.pulumiPackages.pulumi-language-python
       ];
       python = {
         package = inputs.pkgs-unstable.python3;

@@ -1,4 +1,14 @@
 { config, pkgs, username, homeDirectory, sops, lib, ... }@inputs:
+let 
+  pkgs_pulumi_latest = import (pkgs.fetchFromGitHub {
+    owner = "NixOs";
+    repo = "nixpkgs";
+    rev = "82d80188faaa69a6dfa7e5c3f624e653d6943368";
+    sha256 = "sha256-WXVaAtpvV/FJ0PT598b1MZ+qpBFP+s9raEDVDrMLj2c=";
+  }) {
+    inherit (pkgs) system;
+  };
+in
 {
   # common configurations, if you don't want to use them, remove the import but you'll need to 
   # define at least the following:
@@ -25,6 +35,11 @@
 
     # using python from pkgs-unstable
     dev = {
+      pulumi.enable = true;
+      pulumi.package = pkgs_pulumi_latest.pulumi;
+      pulumi.extraPackages = [
+        pkgs_pulumi_latest.pulumiPackages.pulumi-language-python
+      ];
       python = {
         package = inputs.pkgs-unstable.python3;
         extraPackages = with inputs.pkgs-unstable; [
