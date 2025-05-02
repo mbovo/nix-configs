@@ -11,7 +11,11 @@
     };
 
     custom.dev.pulumi.extraPackages = lib.mkOption {
-      default = [];
+      default = [
+        pkgs.pulumiPackages.pulumi-language-python
+        pkgs.pulumiPackages.pulumi-language-go
+        pkgs.pulumiPackages.pulumi-language-typescript
+      ];
       type = lib.types.listOf lib.types.package;
       description = "list of extra pulumi packages to install";
     };

@@ -25,6 +25,7 @@
 
     # using python from pkgs-unstable
     dev = {
+      pulumi.enable = true;
       python = {
         package = inputs.pkgs-unstable.python3;
         extraPackages = with inputs.pkgs-unstable; [
