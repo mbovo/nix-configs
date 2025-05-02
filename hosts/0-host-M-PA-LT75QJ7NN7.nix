@@ -10,14 +10,6 @@ let
   };
 in
 {
-  # common configurations, if you don't want to use them, remove the import but you'll need to 
-  # define at least the following:
-  # # home = {
-  # #   inherit username homeDirectory;
-    
-  # #   keyboard.layout = "it";
-  # #   stateVersion = "23.11";
-  # # }
   imports = [
     ./common.nix
   ];
