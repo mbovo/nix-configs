@@ -38,13 +38,13 @@ in
         ];
       };
       go.enable = true;
+      vault.enable = true;
+      nodejs.enable = false;
     };
 
-    docker = {
-      enable = true;
-      config.daemon = "${inputs.priv-config}/common/dotfiles/docker/daemon.json";
-      config.file = "${inputs.priv-config}/common/dotfiles/docker/config.json.sops";
-    };
+    docker.enable = true;
+    
+    cloudProviders.aws.enable = true;
 
     git.gh.package = inputs.pkgs-unstable.gh;
 

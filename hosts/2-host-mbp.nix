@@ -41,11 +41,7 @@ in
       go.enable = true;
     };
 
-    docker = {
-      enable = true;
-      config.daemon = "${inputs.priv-config}/common/dotfiles/docker/daemon.json";
-      config.file = "${inputs.priv-config}/common/dotfiles/docker/config.json.sops";
-    };
+    docker.enable = true;
 
     git.gh.package = inputs.pkgs-unstable.gh;
 
