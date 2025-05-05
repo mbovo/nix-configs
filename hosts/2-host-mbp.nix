@@ -1,18 +1,17 @@
 { config, pkgs, username, homeDirectory, sops, lib, ... }@inputs:
+
 let 
   pkgs_pulumi_latest = import (pkgs.fetchFromGitHub {
     owner = "NixOs";
     repo = "nixpkgs";
     rev = "82d80188faaa69a6dfa7e5c3f624e653d6943368";
-    sha256 = "sha256-WXVaAtpvV/FJ0PT598b1MZ+qpBFP+s9raEDVDrMLj2c=";
+    sha256 = "sha256-BaM1+1NWIzZpJ/W5h3ZJdGzuZFa0atv+7ZSmWr3Z7Tk=";
   }) {
     inherit (pkgs) system;
   };
 in
 {
-  imports = [
-    ./common.nix
-  ];
+  imports = [];
 
   custom = {
 
@@ -28,9 +27,9 @@ in
     # using python from pkgs-unstable
     dev = {
       pulumi.enable = true;
-      pulumi.package = pkgs_pulumi_latest.pulumi;
+      pulumi.package = inputs.pkgs-unstable.pulumi;
       pulumi.extraPackages = [
-        pkgs_pulumi_latest.pulumiPackages.pulumi-language-python
+        inputs.pkgs-unstable.pulumiPackages.pulumi-language-python
       ];
       python = {
         package = inputs.pkgs-unstable.python3;
