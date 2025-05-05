@@ -39,7 +39,10 @@ in
       };
       go.enable = true;
       vault.enable = true;
-      nodejs.enable = false;
+      nodejs = {
+        enable = true;
+        package = pkgs.nodejs_22;
+      };
     };
 
     docker.enable = true;
