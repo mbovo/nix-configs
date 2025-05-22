@@ -3,8 +3,8 @@ let
   pkgs_pulumi_latest = import (pkgs.fetchFromGitHub {
     owner = "NixOs";
     repo = "nixpkgs";
-    rev = "82d80188faaa69a6dfa7e5c3f624e653d6943368";
-    sha256 = "sha256-WXVaAtpvV/FJ0PT598b1MZ+qpBFP+s9raEDVDrMLj2c=";
+    rev = "123109b0034ea3232ed168a5763994bdd3049e3d"; # https://github.com/NixOS/nixpkgs/pull/409671
+    sha256 = "sha256-SC4vkQAVZYN6R7ceQr+rca0tbPvGzJoT/HL1OBNIkUk=";
   }) {
     inherit (pkgs) system;
   };
@@ -26,10 +26,10 @@ in
     # using python from pkgs-unstable
     dev = {
       pulumi.enable = true;
-      pulumi.package = pkgs_pulumi_latest.pulumi;
-      pulumi.extraPackages = [
-        pkgs_pulumi_latest.pulumiPackages.pulumi-language-python
-      ];
+      pulumi.package = pkgs_pulumi_latest.pulumi-bin;
+      pulumi.extraPackages = [];   # needed to avoid collision with the default pulumi package
+      #   pkgs_pulumi_latest.pulumiPackages.pulumi-language-python
+      # ];
       python = {
         package = inputs.pkgs-unstable.python3;
         extraPackages = with inputs.pkgs-unstable; [
