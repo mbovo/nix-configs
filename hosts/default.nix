@@ -31,7 +31,7 @@ in
     # ==================================================================================================================
     # personal MacOs configuration
     # ==================================================================================================================
-    "manuel@mbp.local" = inputs.home-manager.lib.homeManagerConfiguration (
+    "manuel@mbp" = inputs.home-manager.lib.homeManagerConfiguration (
       import ./loader.nix {
         system = "x86_64-darwin";
         hostname = "mbp";
