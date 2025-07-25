@@ -19,6 +19,12 @@
       description = "list of extra python packages to install";
     };
 
+    custom.dev.python.withPackages = lib.mkOption {
+      default = [];
+      type = lib.types.listOf lib.types.package;
+      description = "additional python packages";
+    };
+
   };
 
   config = lib.mkMerge [
@@ -28,9 +34,9 @@
             pp: [
               pp.pyyaml
             ]
-          ) 
+          )
         )
-      ] ++ config.custom.dev.python.extraPackages;
+      ] ++ config.custom.dev.python.withPackages ++ config.custom.dev.python.extraPackages;
     })
   ];
 

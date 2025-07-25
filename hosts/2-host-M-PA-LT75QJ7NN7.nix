@@ -31,7 +31,10 @@ in
       #   pkgs_pulumi_latest.pulumiPackages.pulumi-language-python
       # ];
       python = {
-        package = inputs.pkgs-unstable.python3;
+        package = inputs.pkgs-unstable.python311;
+        # withPackages = [ (inputs.pkgs-unstable.python311.withPackages ( ps: [
+        #   ...
+        # ])) ] ;
         extraPackages = with inputs.pkgs-unstable; [
           pipenv
           poetry
