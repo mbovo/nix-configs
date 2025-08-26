@@ -3,8 +3,8 @@ let
   pkgs_pulumi_latest = import (pkgs.fetchFromGitHub {
     owner = "NixOs";
     repo = "nixpkgs";
-    rev = "907bb98c27fef5b8f8c1526ca9bf4a51ffa40055"; 
-    sha256 = "sha256-XwPsGDjSid2BJxZlHBm5nYKSWT6TQxJCF8V3m+alQc4=";
+    rev = "master";
+    sha256 = "sha256-S9/z/47tKfUlEbrhm+B+cZ0DDYX+CxFIFXvUj45JlF8=";
   }) {
     inherit (pkgs) system;
   };
