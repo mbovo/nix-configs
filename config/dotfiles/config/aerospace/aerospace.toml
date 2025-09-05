@@ -110,8 +110,8 @@ ctrl-alt-up = 'move up'
 ctrl-alt-right = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-cmd-alt-left = 'resize smart +50' 
-cmd-alt-right = 'resize smart -50'
+cmd-alt-up = 'resize smart +50' 
+cmd-alt-down = 'resize smart -50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 ctrl-1 = 'workspace 1'
@@ -205,13 +205,6 @@ cmd-enter = ['exec-and-forget ~/bin/scratchpad.sh']
     if.app-name-regex-substring = '^Google Chrome'
     run = ['move-node-to-workspace 10']
 
-[[on-window-detected]]
-    if.app-name-regex-substring = '^Mail'
-    run = ['move-node-to-workspace 10']
-
-[[on-window-detected]]
-    if.app-name-regex-substring = '^Calendar'
-    run = ['move-node-to-workspace 10']
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 # ctrl-r = 'mode service'
