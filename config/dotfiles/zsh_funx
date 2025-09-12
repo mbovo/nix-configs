@@ -33,3 +33,20 @@ function kev {
 kfailpo(){
  kubectl get pod $@ | grep -v "1/1|2/2|3/3|4/4|5/5" | grep -v " Completed| Error"
 }
+
+ghpr(){
+
+  if [ -z "$1" ]; then
+    echo "Usage: ghpr <github_pull_request_url>"
+    return 1
+  fi
+
+  spath=$(echo "${1}" | sed -e 's/https:\/\///g')
+  directory=$(echo "${spath}" | awk -F '/' '{print $1"/"$2"/"$3}' | sed 's/\.com//g')
+  prn=$(echo "${spath}" | awk -F '/' '{print $5}')
+
+  cd "$HOME/${directory}"
+  gh pr checkout "${prn}"
+  gh pr diff
+  gh pr review
+}
