@@ -26,7 +26,7 @@
         venvDir = venv;
         postVenvCreation = ''
           unset SOURCE_DATE_EPOCH
-          python -m venv .venv --prompt $(echo $PWD | sed 's?.*prjs/\([-a-zA-z0-9]*\)/.*?\1?') --upgrade-deps
+          python -m venv .venv --prompt $(echo $PWD | sed 's|.*prjs/primait/\([-a-zA-z0-9]*.*\)|\1|') --upgrade-deps
           poetry env use ${venv}/bin/python
           poetry install --no-root
         '';
