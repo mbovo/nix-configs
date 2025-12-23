@@ -4,8 +4,9 @@ let
   pkgs_pulumi_latest = import (pkgs.fetchFromGitHub {
     owner = "NixOs";
     repo = "nixpkgs";
-    rev = "907bb98c27fef5b8f8c1526ca9bf4a51ffa40055"; 
-    sha256 = "sha256-XwPsGDjSid2BJxZlHBm5nYKSWT6TQxJCF8V3m+alQc4=";
+    rev = "d222d01cd2ea050af63ae3ac1e151e9b0f7f6aac"; 
+    sha256 = "sha256-8ILBMTB3tU4etacU9JcmUtO+gDoWE4TmhlK+hSyy/zk=";
+    #sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # placeholder
   }) {
     inherit (pkgs) system;
   };
@@ -42,6 +43,7 @@ in
     };
 
     docker.enable = true;
+    docker.darwin.packages = [inputs.pkgs-unstable.qemu inputs.pkgs-unstable.lima inputs.pkgs-unstable.colima];
 
     git.gh.package = inputs.pkgs-unstable.gh;
 
