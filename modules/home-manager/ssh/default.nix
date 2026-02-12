@@ -15,8 +15,8 @@
      
       programs = {
           ssh = {
+            enableDefaultConfig = false;
             enable = true;
-            compression = true;
             extraOptionOverrides = { 
                   PubkeyAcceptedKeyTypes = "+ssh-rsa";
                   HostKeyAlgorithms = "+ssh-rsa";

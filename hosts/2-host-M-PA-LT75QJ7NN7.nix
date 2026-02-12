@@ -32,7 +32,7 @@ in
       #   pkgs_pulumi_latest.pulumiPackages.pulumi-language-python
       # ];
       python = {
-        package = inputs.pkgs-unstable.python311;
+        package = inputs.pkgs-unstable.python314;
         # withPackages = [ (inputs.pkgs-unstable.python311.withPackages ( ps: [
         #   ...
         # ])) ] ;

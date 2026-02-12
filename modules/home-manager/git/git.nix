@@ -90,15 +90,15 @@
       programs.git = {
             enable = true;
             package = config.custom.git.package;
-            userName = config.custom.git.config.username;
-            userEmail = config.custom.git.config.email;
-            aliases = {
-              root = "rev-parse --show-toplevel";
-              oops = "commit --amend --no-edit";
-              daje = "push --force-with-lease";
-            };
-            extraConfig = {
+            settings = {
+              alias = {
+                root = "rev-parse --show-toplevel";
+                oops = "commit --amend --no-edit";
+                daje = "push --force-with-lease";
+              };
               user = {
+                name = config.custom.git.config.username;
+                email = config.custom.git.config.email;
                 signingKey = config.custom.git.extraConfig.signingKey;
               };
               commit = {
