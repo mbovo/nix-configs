@@ -8,9 +8,11 @@
     stateVersion = "23.11"; # don't change it
     activation = {
       diffChanges = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if [[ -n "''${oldGenPath:-}" ]]; then
           PATH=$PATH:${lib.makeBinPath (with pkgs; [nvd nix-diff])}
           verboseEcho "Diff packages [nvd]"
           run nvd diff $oldGenPath $newGenPath
+        fi
       '';
     };
   };

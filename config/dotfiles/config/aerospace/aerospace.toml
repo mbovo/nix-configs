@@ -124,6 +124,8 @@ ctrl-7 = 'workspace 7'
 ctrl-8 = 'workspace 8'
 ctrl-9 = 'workspace 9'
 ctrl-0 = 'workspace 10'
+ctrl-A = 'workspace A'
+ctrl-B = 'workspace B'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-shift-1 = ['move-node-to-workspace 1']
@@ -136,6 +138,8 @@ ctrl-shift-7 = ['move-node-to-workspace 7']
 ctrl-shift-8 = ['move-node-to-workspace 8']
 ctrl-shift-9 = ['move-node-to-workspace 9']
 ctrl-shift-0 = ['move-node-to-workspace 10']
+ctrl-shift-A = ['move-node-to-workspace A']
+ctrl-shift-B = ['move-node-to-workspace B']
 
 ctrl-alt-shift-1 = ['move-node-to-workspace 1', 'workspace 1']
 ctrl-alt-shift-2 = ['move-node-to-workspace 2', 'workspace 2']
@@ -147,6 +151,8 @@ ctrl-alt-shift-7 = ['move-node-to-workspace 7', 'workspace 7']
 ctrl-alt-shift-8 = ['move-node-to-workspace 8', 'workspace 8']
 ctrl-alt-shift-9 = ['move-node-to-workspace 9', 'workspace 9']
 ctrl-alt-shift-0 = ['move-node-to-workspace 10', 'workspace 10']
+ctrl-alt-shift-A = ['move-node-to-workspace A', 'workspace A']
+ctrl-alt-shift-B = ['move-node-to-workspace B', 'workspace B']
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 ctrl-tab = 'workspace-back-and-forth'
@@ -165,6 +171,8 @@ cmd-enter = ['exec-and-forget ~/bin/scratchpad.sh']
     4 = ['main']
     5 = ['main']
     6 = ['main']
+    A = ['main']
+    B = ['main']
     7 = ['built-in']
     8 = ['built-in']
     9 = ['secondary', 'LG HDR 4K']

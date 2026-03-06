@@ -5,7 +5,7 @@ let
     owner = "NixOs";
     repo = "nixpkgs";
     rev = "d222d01cd2ea050af63ae3ac1e151e9b0f7f6aac"; 
-    sha256 = "sha256-8ILBMTB3tU4etacU9JcmUtO+gDoWE4TmhlK+hSyy/zk=";
+    sha256 = "sha256-frPNMjBx0lS1LK6t2o7f8edf1wB4jilPEccK3ONee80=";
     #sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # placeholder
   }) {
     inherit (pkgs) system;
