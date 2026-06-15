@@ -6,7 +6,7 @@
     custom.docker.enable = lib.mkEnableOption "Enable custom docker configuration";
 
     custom.docker.package = lib.mkOption {
-      default = pkgs.docker;
+      default = pkgs.docker_29;
       type = lib.types.package;
       description = "docker package to install";
     };
@@ -14,8 +14,8 @@
     custom.docker.darwin.packages = lib.mkOption {
       default = [
         pkgs.qemu
-        pkgs.lima
-        pkgs.colima
+        #pkgs.lima
+        #pkgs.colima
       ];
       type = lib.types.listOf lib.types.package;
       description = "list of extra packages to install on darwin systems";
