@@ -175,10 +175,10 @@ cmd-enter = ['exec-and-forget ~/bin/scratchpad.sh']
     4 = ['main']
     5 = ['main']
     6 = ['main']
-    A = ['main']
-    B = ['main']
+    A = ['built-in']
+    B = ['built-in']
     7 = ['built-in']
-    8 = ['built-in']
+    8 = ['secondary', 'LG HDR 4K']
     9 = ['secondary', 'LG HDR 4K']
     10 = ['secondary', 'LG HDR 4K']
 
@@ -207,7 +207,7 @@ cmd-enter = ['exec-and-forget ~/bin/scratchpad.sh']
 
 [[on-window-detected]]
     if.app-name-regex-substring = '^[dD]iscord'
-    run = ['move-node-to-workspace 8'] 
+    run = ['move-node-to-workspace 7'] 
 
 [[on-window-detected]]
     if.app-name-regex-substring = '^[sS]lack'
@@ -215,8 +215,11 @@ cmd-enter = ['exec-and-forget ~/bin/scratchpad.sh']
 
 [[on-window-detected]]
     if.app-name-regex-substring = '^Google Chrome'
-    run = ['move-node-to-workspace 10']
+    run = ['move-node-to-workspace 2']
 
+[[on-window-detected]]
+    if.app-name-regex-substring = '^Google Meet'
+    run = ['move-node-to-workspace 10']
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 # ctrl-r = 'mode service'
