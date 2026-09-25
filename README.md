@@ -155,6 +155,6 @@ Homebrew itself is removed only if Ansible installed it and nothing installed ou
 ### Notes
 
 - **Intel Macs (x86_64):** Homebrew supports them only at Tier 3, so formulae without an Intel bottle are compiled from source. To list them: `cd ansible && .venv/bin/python scripts/check_brew_bottles.py --arch x86_64 <formula...>`
-- **Nixpkgs-only tools:** `nix-direnv`, `hping`, `nil`, `nvd`, `nix-diff` and `nix-output-monitor` aren't in Homebrew. They're installed with `nix profile` when nix is present, otherwise skipped.
+- **Nixpkgs-only tools:** `devbox`, `nix-direnv`, `hping`, `nil`, `nvd`, `nix-diff` and `nix-output-monitor` aren't in Homebrew. They're installed with `nix profile` when nix is present, otherwise skipped.
 - **New host:** add it to `ansible/inventory/hosts.yml` (groups `desktop`/`darwin`) and create `ansible/inventory/host_vars/<host>.yml` with at least `home_username`.
 - **Lint:** `cd ansible && .venv/bin/ansible-lint playbooks/ roles/`
