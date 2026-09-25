@@ -1,11 +1,20 @@
 ---
+- name: Track files written by git
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ git_managed_files }}"
+
 - name: Install git packages
-  community.general.homebrew:
-    name: >-
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: >-
       {{ ([git_package] if git_enable | bool else [])
          + (git_extra_packages if git_extra_enable | bool else [])
          + ([git_gh_package] if git_gh_enable | bool else []) }}
-    state: present
   when: git_enable | bool or git_extra_enable | bool or git_gh_enable | bool
 
 - name: Configure git

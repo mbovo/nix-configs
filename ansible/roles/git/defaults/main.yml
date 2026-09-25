@@ -78,3 +78,9 @@ git_gh_settings:
     pl: pr list
     pv: pr view
     pw: pr view --web
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+git_managed_files: >-
+  {{ ([git_config_path] if git_enable | bool else [])
+     + ([home_directory ~ '/.gitignore_global'] if git_config_gitignore_global | length > 0 else [])
+     + ([home_directory ~ '/.config/gh/config.yml'] if git_gh_enable | bool else []) }}

@@ -1,0 +1,9 @@
+---
+# Expects manifest_kind and manifest_items.
+- name: "Record installed {{ manifest_kind }}"
+  ansible.builtin.lineinfile:
+    path: "{{ manifest_dir }}/{{ manifest_kind }}.txt"
+    line: "{{ item }}"
+    create: true
+    mode: "0644"
+  loop: "{{ manifest_items }}"

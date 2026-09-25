@@ -1,4 +1,11 @@
 ---
+- name: Track files written by nixify
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ nixify_managed_files }}"
+
 - name: Create nixify directories
   ansible.builtin.file:
     path: "{{ item }}"

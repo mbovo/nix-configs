@@ -37,3 +37,14 @@ homebrew_prefix_subdirs:
 homebrew_directories: >-
   {{ [homebrew_prefix] if homebrew_repository == homebrew_prefix
      else homebrew_prefix_subdirs | map('regex_replace', '^', homebrew_prefix ~ '/') | list }}
+
+# What the official uninstall.sh deletes; with a separate repository, shared prefix dirs are kept.
+homebrew_owned_paths: >-
+  {{ [homebrew_prefix] if homebrew_repository == homebrew_prefix
+     else [homebrew_repository, homebrew_prefix ~ '/Cellar', homebrew_prefix ~ '/Caskroom',
+           homebrew_prefix ~ '/var/homebrew', homebrew_prefix ~ '/bin/brew',
+           homebrew_prefix ~ '/etc/bash_completion.d/brew', homebrew_prefix ~ '/share/zsh/site-functions/_brew',
+           homebrew_prefix ~ '/share/doc/homebrew', homebrew_prefix ~ '/share/man/man1/brew.1'] }}
+homebrew_user_paths:
+  - "{{ home_directory }}/Library/Caches/Homebrew"
+  - "{{ home_directory }}/Library/Logs/Homebrew"

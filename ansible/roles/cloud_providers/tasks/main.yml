@@ -1,4 +1,12 @@
 ---
+- name: Track files written by cloud_providers
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ cloud_providers_managed_files }}"
+  tags: [always]
+
 - name: AWS
   ansible.builtin.import_tasks: aws.yml
   tags: [aws]

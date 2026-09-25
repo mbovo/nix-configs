@@ -1,0 +1,53 @@
+---
+# Install formulae/casks and record the ones this run added. Expects homebrew_formulae and/or homebrew_casks.
+- name: Check for brew
+  ansible.builtin.stat:
+    path: "{{ homebrew_prefix }}/bin/brew"
+  register: homebrew_packages_brew
+
+- name: Report packages a real run would install
+  ansible.builtin.debug:
+    msg: "Homebrew not installed yet; would install {{ homebrew_formulae | default([]) + homebrew_casks | default([]) }}"
+  when:
+    - not homebrew_packages_brew.stat.exists
+    - ansible_check_mode
+
+- name: Require brew outside dry runs
+  ansible.builtin.assert:
+    that: homebrew_packages_brew.stat.exists or ansible_check_mode
+    fail_msg: "Homebrew not found in {{ homebrew_prefix }}: run playbooks/bootstrap.yml -K first."
+    quiet: true
+
+- name: Install and record packages
+  when: homebrew_packages_brew.stat.exists
+  block:
+    - name: Install formulae
+      community.general.homebrew:
+        name: "{{ homebrew_formulae }}"
+        state: present
+      register: homebrew_formulae_result
+      when: homebrew_formulae | default([]) | length > 0
+
+    - name: Record installed formulae
+      ansible.builtin.include_role:
+        name: manifest
+        tasks_from: record.yml
+      vars:
+        manifest_kind: formulae
+        manifest_items: "{{ homebrew_formulae_result.changed_pkgs | default([]) }}"
+
+    # One at a time: homebrew_cask does not report which casks it installed.
+    - name: Install casks
+      community.general.homebrew_cask:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ homebrew_casks | default([]) }}"
+      register: homebrew_casks_result
+
+    - name: Record installed casks
+      ansible.builtin.include_role:
+        name: manifest
+        tasks_from: record.yml
+      vars:
+        manifest_kind: casks
+        manifest_items: "{{ homebrew_casks_result.results | default([]) | selectattr('changed') | map(attribute='item') | list }}"

@@ -1,4 +1,11 @@
 ---
+- name: Track files written by ssh
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ ssh_managed_files }}"
+
 - name: Configure ssh
   when: ssh_enable | bool
   block:

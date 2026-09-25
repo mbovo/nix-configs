@@ -1,6 +1,8 @@
 ---
 - name: Install Pulumi
-  community.general.homebrew:
-    name: "{{ [dev_tools_pulumi_package] + dev_tools_pulumi_extra_packages }}"
-    state: present
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: "{{ [dev_tools_pulumi_package] + dev_tools_pulumi_extra_packages }}"
   when: dev_tools_pulumi_enable | bool

@@ -7,3 +7,6 @@ ssh_includes: []
 # programs.ssh.matchBlocks equivalent: {"<host pattern>": {<ssh_config keyword>: value}}.
 # A block may set `match: "<criteria>"` to render `Match` instead of `Host`.
 ssh_match_blocks: {}
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+ssh_managed_files: "{{ [home_directory ~ '/.ssh/config'] if ssh_enable | bool else [] }}"

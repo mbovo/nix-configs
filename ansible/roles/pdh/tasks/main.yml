@@ -3,9 +3,11 @@
   when: pdh_enable | bool
   block:
     - name: Install pipx
-      community.general.homebrew:
-        name: pipx
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: [pipx]
 
     - name: Install pdh with pipx
       community.general.pipx:

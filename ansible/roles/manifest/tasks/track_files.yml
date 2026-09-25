@@ -1,0 +1,70 @@
+---
+# Before Ansible first writes a path: back up what is there, then remember the path. Expects manifest_files.
+- name: Read tracked files
+  ansible.builtin.import_tasks: read.yml
+  vars:
+    manifest_kind: files
+
+- name: Select paths not tracked yet
+  ansible.builtin.set_fact:
+    manifest_new_files: "{{ manifest_files | select | reject('in', manifest_entries) | unique | list }}"
+
+- name: Inspect paths not tracked yet
+  ansible.builtin.stat:
+    path: "{{ item }}"
+    follow: false
+  loop: "{{ manifest_new_files }}"
+  register: manifest_new_stat
+
+- name: Create backup directories
+  ansible.builtin.file:
+    path: "{{ manifest_dir }}/backup{{ item.item | dirname }}"
+    state: directory
+    mode: "0700"
+  loop: "{{ manifest_new_stat.results | selectattr('stat.exists') | rejectattr('stat.islnk') | list }}"
+  loop_control:
+    label: "{{ item.item }}"
+
+- name: Back up pre-existing files
+  ansible.builtin.copy:
+    src: "{{ item.item }}"
+    dest: "{{ manifest_dir }}/backup{{ item.item | dirname }}/"
+    remote_src: true
+    mode: preserve
+  loop: "{{ manifest_new_stat.results | selectattr('stat.exists') | rejectattr('stat.islnk') | list }}"
+  loop_control:
+    label: "{{ item.item }}"
+
+- name: Remember pre-existing symlinks
+  ansible.builtin.lineinfile:
+    path: "{{ manifest_dir }}/links.txt"
+    line: "{{ item.item }}\t{{ item.stat.lnk_target }}"
+    create: true
+    mode: "0644"
+  loop: "{{ manifest_new_stat.results | selectattr('stat.exists') | selectattr('stat.islnk') | list }}"
+  loop_control:
+    label: "{{ item.item }}"
+
+- name: Track the new paths
+  ansible.builtin.import_tasks: record.yml
+  vars:
+    manifest_kind: files
+    manifest_items: "{{ manifest_new_files }}"
+
+- name: Inspect parent directories of the new paths
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  loop: >-
+    {{ (manifest_new_files | map('dirname') | list
+        + manifest_new_files | map('dirname') | map('dirname') | list
+        + manifest_new_files | map('dirname') | map('dirname') | map('dirname') | list)
+       | select('match', (home_directory ~ '/') | regex_escape) | unique | list }}
+  register: manifest_parent_stat
+
+- name: Remember directories that do not exist yet
+  ansible.builtin.lineinfile:
+    path: "{{ manifest_dir }}/dirs.txt"
+    line: "{{ item }}"
+    create: true
+    mode: "0644"
+  loop: "{{ manifest_parent_stat.results | rejectattr('stat.exists') | map(attribute='item') | list }}"

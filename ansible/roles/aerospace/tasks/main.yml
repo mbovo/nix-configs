@@ -1,4 +1,11 @@
 ---
+- name: Track files written by aerospace
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ aerospace_managed_files }}"
+
 # The nix module only links config files; AeroSpace itself is not installed by it.
 - name: Configure AeroSpace
   when: aerospace_enable | bool

@@ -12,3 +12,6 @@ cloud_providers_gcp_cask: gcloud-cli
 cloud_providers_gcp_components: [gke-gcloud-auth-plugin]
 
 # azure.nix / digitalocean.nix are empty modules in the nix tree.
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+cloud_providers_managed_files: "{{ [home_directory ~ '/.aws/config'] if cloud_providers_aws_extra_config | length > 0 else [] }}"

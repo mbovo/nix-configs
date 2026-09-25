@@ -3,9 +3,11 @@
   when: shells_atuin_enable | bool
   block:
     - name: Install atuin
-      community.general.homebrew:
-        name: "{{ shells_atuin_package }}"
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: ["{{ shells_atuin_package }}"]
 
     - name: Generate atuin init script
       ansible.builtin.command:

@@ -23,3 +23,12 @@ shells_atuin_key: ""
 shells_wezterm_enable: false
 shells_wezterm_cask: wezterm
 shells_wezterm_config_file: ""
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+shells_managed_files: >-
+  {{ shells_zsh_extra_files.keys() | map('regex_replace', '^', home_directory ~ '/') | list
+     + ([shells_zsh_ohmyzsh_dir] if shells_zsh_enable | bool else [])
+     + ([home_directory ~ '/.atuin.zsh'] if shells_atuin_enable | bool else [])
+     + ([home_directory ~ '/.local/share/atuin/key'] if shells_atuin_key | length > 0 else [])
+     + ([home_directory ~ '/.config/atuin/config.toml'] if shells_atuin_config | length > 0 else [])
+     + ([home_directory ~ '/.wezterm.lua'] if shells_wezterm_config_file | length > 0 else []) }}

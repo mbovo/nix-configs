@@ -1,7 +1,9 @@
 ---
 # EDITOR=nvim is exported by the zshrc dotfile.
 - name: Install editor
-  community.general.homebrew:
-    name: "{{ cli_tools_editor_package }}"
-    state: present
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: ["{{ cli_tools_editor_package }}"]
   when: cli_tools_editor_enable | bool

@@ -3,9 +3,11 @@
   when: cli_tools_nix_utils_enable | bool
   block:
     - name: Install nix utilities from Homebrew
-      community.general.homebrew:
-        name: "{{ cli_tools_nix_utils_packages }}"
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: "{{ cli_tools_nix_utils_packages }}"
 
     - name: Install nixpkgs-only nix utilities
       ansible.builtin.include_role:

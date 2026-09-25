@@ -29,8 +29,18 @@
         argv: "{{ [nix_profile_bin] + nix_profile_nix_args + ['profile', 'install', nix_profile_flake ~ '#' ~ item] }}"
       loop: "{{ nix_profile_packages }}"
       changed_when: true
+      register: nix_profile_install_result
       when: >-
         (nix_profile_installed is mapping and item not in nix_profile_installed)
         or (nix_profile_installed is not mapping
             and nix_profile_installed | selectattr('attrPath', 'defined')
                 | selectattr('attrPath', 'search', '\.' ~ item ~ '$') | list | length == 0)
+
+    - name: Record nix profile packages
+      ansible.builtin.include_role:
+        name: manifest
+        tasks_from: record.yml
+      vars:
+        manifest_kind: nix
+        manifest_items: "{{ nix_profile_install_result.results | rejectattr('skipped', 'defined') | selectattr('changed') | map(attribute='item') | list }}"
+      when: not ansible_check_mode

@@ -17,6 +17,19 @@
       register: site_brew
       tags: [always]
 
+    - name: Stop the dry run when Homebrew is missing
+      when:
+        - not site_brew.stat.exists
+        - ansible_check_mode
+      tags: [always]
+      block:
+        - name: Explain why the dry run stops
+          ansible.builtin.debug:
+            msg: "Homebrew not found in {{ homebrew_prefix }}: dry-run playbooks/bootstrap.yml instead; nothing below can be simulated yet."
+
+        - name: End the dry run for this host
+          ansible.builtin.meta: end_host
+
     - name: Stop when Homebrew is missing
       ansible.builtin.assert:
         that: site_brew.stat.exists

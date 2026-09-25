@@ -1,3 +1,6 @@
 ---
 brew_enable: false
 brew_config_file: ""
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+brew_managed_files: "{{ [home_directory ~ '/.config/brewfile/Brewfile'] if brew_enable | bool else [] }}"

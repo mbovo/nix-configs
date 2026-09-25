@@ -44,8 +44,15 @@
         fail_msg: Run `xcode-select --install` first, then re-run this playbook.
         quiet: true
 
+    - name: Check which Homebrew directories already exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      loop: "{{ homebrew_directories }}"
+      register: homebrew_dirs_before
+
+    # No sudo in check mode: nothing is written, so a dry run needs no password.
     - name: Create Homebrew directories
-      become: true
+      become: "{{ not ansible_check_mode }}"
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -53,6 +60,17 @@
         group: "{{ 'admin' if ansible_facts['system'] == 'Darwin' else omit }}"
         mode: "0755"
       loop: "{{ homebrew_directories }}"
+
+    - name: Record Homebrew directories created by Ansible
+      ansible.builtin.include_role:
+        name: manifest
+        tasks_from: record.yml
+      vars:
+        manifest_kind: homebrew
+        manifest_items: >-
+          {{ homebrew_dirs_before.results | rejectattr('stat.exists') | map(attribute='item') | list
+             + [homebrew_repository] }}
+      when: not ansible_check_mode
 
     # `brew update` below moves the checkout to the latest stable tag.
     - name: Clone Homebrew # noqa: latest[git]
@@ -67,6 +85,7 @@
         src: "{{ homebrew_repository }}/bin/brew"
         dest: "{{ homebrew_prefix }}/bin/brew"
         state: link
+        force: true
       when: homebrew_repository != homebrew_prefix
 
     - name: Initial brew update (switches to the latest stable tag)

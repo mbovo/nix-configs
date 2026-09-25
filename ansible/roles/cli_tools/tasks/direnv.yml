@@ -3,9 +3,11 @@
   when: cli_tools_direnv_enable | bool
   block:
     - name: Install direnv
-      community.general.homebrew:
-        name: "{{ cli_tools_direnv_package }}"
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: ["{{ cli_tools_direnv_package }}"]
 
     - name: Install nix-direnv
       ansible.builtin.include_role:

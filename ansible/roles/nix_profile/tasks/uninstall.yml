@@ -1,0 +1,31 @@
+---
+- name: Read recorded nix profile packages
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: read.yml
+  vars:
+    manifest_kind: nix
+
+- name: Check for Nix
+  ansible.builtin.stat:
+    path: "{{ nix_profile_bin }}"
+  register: nix_profile_nix
+
+- name: Remove nix profile packages
+  ansible.builtin.command:
+    argv: "{{ [nix_profile_bin] + nix_profile_nix_args + ['profile', 'remove', item] }}"
+  loop: "{{ manifest_entries }}"
+  register: nix_profile_remove_result
+  changed_when: true
+  when: nix_profile_nix.stat.exists
+
+- name: Forget removed nix profile packages
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: forget.yml
+  vars:
+    manifest_kind: nix
+    manifest_items: >-
+      {{ nix_profile_remove_result.results | default([]) | selectattr('rc', 'defined')
+         | selectattr('rc', 'eq', 0) | map(attribute='item') | list }}
+  when: not ansible_check_mode

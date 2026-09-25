@@ -1,8 +1,10 @@
 ---
 - name: Install security tools
-  community.general.homebrew:
-    name: >-
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: >-
       {{ (sec_tools_packages if sec_tools_enable | bool else [])
          + (sec_tools_extra_packages if sec_tools_extra_enable | bool else []) }}
-    state: present
   when: sec_tools_enable | bool or sec_tools_extra_enable | bool

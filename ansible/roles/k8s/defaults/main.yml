@@ -13,3 +13,6 @@ k8s_extra_fluxcd_enable: false
 k8s_extra_fluxcd_package: fluxcd
 k8s_extra_argocd_enable: false
 k8s_extra_argocd_package: argocd
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+k8s_managed_files: "{{ [home_directory ~ '/krew_list'] if k8s_enable | bool else [] }}"

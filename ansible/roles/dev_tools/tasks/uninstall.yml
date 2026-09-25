@@ -1,0 +1,29 @@
+---
+# Must run before the Homebrew python formula is removed.
+- name: Read recorded Python modules
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: read.yml
+  vars:
+    manifest_kind: "pip-{{ dev_tools_python_package }}"
+
+- name: Check Homebrew's pip
+  ansible.builtin.stat:
+    path: "{{ homebrew_prefix }}/opt/{{ dev_tools_python_package }}/libexec/bin/pip"
+  register: dev_tools_pip_bin
+
+- name: Remove Python modules from Homebrew's python
+  ansible.builtin.pip:
+    name: "{{ manifest_entries }}"
+    state: absent
+    executable: "{{ dev_tools_pip_bin.stat.path }}"
+    extra_args: --break-system-packages
+  when:
+    - manifest_entries | length > 0
+    - dev_tools_pip_bin.stat.exists
+
+- name: Forget removed Python modules
+  ansible.builtin.file:
+    path: "{{ manifest_dir }}/pip-{{ dev_tools_python_package }}.txt"
+    state: absent
+  when: dev_tools_pip_bin.stat.exists

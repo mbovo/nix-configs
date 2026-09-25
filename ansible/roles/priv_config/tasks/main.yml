@@ -1,4 +1,11 @@
 ---
+- name: Track the private configuration checkout
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ priv_config_managed_files }}"
+
 - name: Fetch the private configuration repository
   ansible.builtin.git:
     repo: "{{ priv_config_repo }}"
@@ -8,12 +15,5 @@
     accept_newhostkey: true
   when: priv_config_enable | bool
 
-- name: Look for host overrides in the private repository
-  ansible.builtin.stat:
-    path: "{{ priv_config_vars_file }}"
-  register: priv_config_vars_stat
-
-- name: Load host overrides from the private repository
-  ansible.builtin.include_vars:
-    file: "{{ priv_config_vars_file }}"
-  when: priv_config_vars_stat.stat.exists
+- name: Load host overrides
+  ansible.builtin.import_tasks: load_vars.yml

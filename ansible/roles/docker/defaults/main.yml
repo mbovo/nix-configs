@@ -10,3 +10,11 @@ docker_config_daemon: ""
 # sops-encrypted (binary) file decrypted to ~/.docker/config.json
 docker_config_file: ""
 docker_colima_ssh_config: "{{ home_directory }}/.colima/ssh_config"
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+docker_managed_files: >-
+  {{ (docker_extra_packages | select('in', docker_cli_plugins)
+        | map('regex_replace', '^', home_directory ~ '/.docker/cli-plugins/') | list
+        if docker_enable | bool and docker_extra_enable | bool else [])
+     + ([home_directory ~ '/.docker/daemon.json'] if docker_config_daemon | length > 0 else [])
+     + ([home_directory ~ '/.docker/config.json'] if docker_config_file | length > 0 else []) }}

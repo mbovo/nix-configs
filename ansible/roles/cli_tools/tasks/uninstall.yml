@@ -1,0 +1,12 @@
+---
+- name: Check ~/.zprofile
+  ansible.builtin.stat:
+    path: "{{ home_directory }}/.zprofile"
+  register: cli_tools_zprofile
+
+- name: Remove gnubin PATH entries
+  ansible.builtin.blockinfile:
+    path: "{{ home_directory }}/.zprofile"
+    marker: "# {mark} ANSIBLE MANAGED: gnubin"
+    state: absent
+  when: cli_tools_zprofile.stat.exists

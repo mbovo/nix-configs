@@ -51,3 +51,12 @@ cli_tools_network_tmux_config_file: ""
 cli_tools_nix_utils_enable: false
 cli_tools_nix_utils_packages: [statix]
 cli_tools_nix_utils_nix_packages: [nix-diff, nvd, nil, nix-output-monitor]
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+cli_tools_managed_files: >-
+  {{ ([home_directory ~ '/.config/direnv/direnv.toml', home_directory ~ '/.config/direnv/lib/hm-nix-direnv.sh']
+       if cli_tools_direnv_enable | bool else [])
+     + ([home_directory ~ '/.config/bat/config'] if cli_tools_modern_bat_enable | bool else [])
+     + ([home_directory ~ '/.config/yazi/yazi.toml'] if cli_tools_modern_yazi_enable | bool else [])
+     + ([home_directory ~ '/.tmux.conf']
+         if cli_tools_network_enable | bool and cli_tools_network_tmux_config_file | length > 0 else []) }}

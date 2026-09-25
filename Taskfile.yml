@@ -55,6 +55,38 @@ tasks:
     cmds:
       - .venv/bin/ansible-playbook playbooks/site.yml -l {{.HOST}} {{.CLI_ARGS}}
 
+  ansible:bootstrap:dry-run:
+    desc: "Show what ansible:bootstrap would change, without sudo (HOST=<inventory host>)"
+    dir: ansible
+    requires:
+      vars: [HOST]
+    cmds:
+      - .venv/bin/ansible-playbook playbooks/bootstrap.yml -l {{.HOST}} --check --diff {{.CLI_ARGS}}
+
+  ansible:apply:dry-run:
+    desc: "Show what ansible:apply would change (HOST=<inventory host>)"
+    dir: ansible
+    requires:
+      vars: [HOST]
+    cmds:
+      - .venv/bin/ansible-playbook playbooks/site.yml -l {{.HOST}} --check --diff {{.CLI_ARGS}}
+
+  ansible:uninstall:
+    desc: "Remove everything Ansible installed, Homebrew included if it installed it (HOST=<inventory host>, asks for sudo)"
+    dir: ansible
+    requires:
+      vars: [HOST]
+    cmds:
+      - .venv/bin/ansible-playbook playbooks/uninstall.yml -l {{.HOST}} -K {{.CLI_ARGS}}
+
+  ansible:uninstall:dry-run:
+    desc: "Show what ansible:uninstall would remove, without sudo (HOST=<inventory host>)"
+    dir: ansible
+    requires:
+      vars: [HOST]
+    cmds:
+      - .venv/bin/ansible-playbook playbooks/uninstall.yml -l {{.HOST}} --check --diff {{.CLI_ARGS}}
+
   ansible:lint:
     desc: Lint the ansible code
     dir: ansible

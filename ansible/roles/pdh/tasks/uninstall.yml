@@ -1,0 +1,14 @@
+---
+- name: Check pipx
+  ansible.builtin.stat:
+    path: "{{ homebrew_prefix }}/bin/pipx"
+  register: pdh_pipx
+
+- name: Remove pdh
+  community.general.pipx:
+    name: pdh
+    state: absent
+    executable: "{{ homebrew_prefix }}/bin/pipx"
+  when:
+    - pdh_enable | bool
+    - pdh_pipx.stat.exists

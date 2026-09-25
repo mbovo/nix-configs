@@ -3,15 +3,26 @@
   when: dev_tools_python_enable | bool
   block:
     - name: Install Python and tooling
-      community.general.homebrew:
-        name: "{{ [dev_tools_python_package] + dev_tools_python_extra_packages }}"
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: "{{ [dev_tools_python_package] + dev_tools_python_extra_packages }}"
 
     - name: Install Python modules into Homebrew's python
       ansible.builtin.pip:
-        name: "{{ dev_tools_python_with_packages }}"
+        name: "{{ item }}"
         executable: "{{ homebrew_prefix }}/opt/{{ dev_tools_python_package }}/libexec/bin/pip"
         extra_args: --break-system-packages
-      when:
-        - dev_tools_python_with_packages | length > 0
-        - not ansible_check_mode
+      loop: "{{ dev_tools_python_with_packages }}"
+      register: dev_tools_pip_result
+      when: not ansible_check_mode
+
+    - name: Record installed Python modules
+      ansible.builtin.include_role:
+        name: manifest
+        tasks_from: record.yml
+      vars:
+        manifest_kind: "pip-{{ dev_tools_python_package }}"
+        manifest_items: "{{ dev_tools_pip_result.results | selectattr('changed') | map(attribute='item') | list }}"
+      when: dev_tools_pip_result.results | default([]) | selectattr('changed') | list | length > 0

@@ -3,9 +3,11 @@
   when: shells_zsh_enable | bool
   block:
     - name: Install zsh packages
-      community.general.homebrew:
-        name: "{{ shells_zsh_packages }}"
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: "{{ shells_zsh_packages }}"
 
     - name: Install oh-my-zsh
       ansible.builtin.git:

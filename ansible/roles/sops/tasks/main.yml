@@ -1,8 +1,17 @@
 ---
+- name: Track files written by sops
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ sops_managed_files }}"
+
 - name: Install sops and age
-  community.general.homebrew:
-    name: "{{ sops_packages }}"
-    state: present
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: "{{ sops_packages }}"
 
 - name: Create the age key directory
   ansible.builtin.file:

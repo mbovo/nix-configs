@@ -1,0 +1,90 @@
+---
+# Remove Homebrew itself, only if Ansible installed it and nothing installed outside Ansible remains.
+- name: Read the Homebrew install record
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: read.yml
+  vars:
+    manifest_kind: homebrew
+
+- name: Keep the Homebrew install record
+  ansible.builtin.set_fact:
+    homebrew_created_dirs: "{{ manifest_entries | difference([homebrew_repository]) }}"
+    homebrew_installed_by_ansible: "{{ manifest_entries | length > 0 }}"
+
+- name: Check the login shell profile
+  ansible.builtin.stat:
+    path: "{{ homebrew_shellenv_file }}"
+  register: homebrew_shellenv_stat
+
+- name: Remove brew shellenv from the login shell
+  ansible.builtin.blockinfile:
+    path: "{{ homebrew_shellenv_file }}"
+    marker: "# {mark} ANSIBLE MANAGED: homebrew"
+    state: absent
+  when: homebrew_shellenv_stat.stat.exists
+
+- name: Report pre-existing Homebrew
+  ansible.builtin.debug:
+    msg: Homebrew was not installed by Ansible, keeping it.
+  when: not homebrew_installed_by_ansible
+
+- name: Remove Homebrew
+  when: homebrew_installed_by_ansible
+  block:
+    - name: Inventory installed packages
+      ansible.builtin.command:
+        argv: ["{{ homebrew_prefix }}/bin/brew", info, --json=v2, --installed]
+      register: homebrew_installed_json
+      changed_when: false
+      check_mode: false
+      failed_when: false
+
+    - name: Parse installed packages
+      ansible.builtin.set_fact:
+        homebrew_installed_info: "{{ homebrew_installed_json.stdout | default('{}', true) | from_json }}"
+
+    # homebrew_uninstall_formulae/casks come from uninstall_packages.yml earlier in the play.
+    - name: Find packages installed outside Ansible
+      ansible.builtin.set_fact:
+        homebrew_foreign_packages: >-
+          {{ (homebrew_installed_info.formulae | default([])
+              | selectattr('installed.0.installed_on_request', 'defined')
+              | selectattr('installed.0.installed_on_request')
+              | map(attribute='full_name') | list
+              + homebrew_installed_info.casks | default([]) | map(attribute='full_token') | list)
+             | difference(homebrew_uninstall_formulae | default([]) + homebrew_uninstall_casks | default([])) }}
+
+    - name: Keep Homebrew while it holds packages Ansible did not install
+      ansible.builtin.debug:
+        msg: >-
+          Keeping Homebrew, still used by: {{ homebrew_foreign_packages | join(', ') }}.
+          Re-run with -e homebrew_uninstall_force=true to remove it anyway.
+      when:
+        - homebrew_foreign_packages | length > 0
+        - not homebrew_uninstall_force | bool
+
+    - name: Delete Homebrew
+      when: homebrew_foreign_packages | length == 0 or homebrew_uninstall_force | bool
+      block:
+        - name: Delete Homebrew files
+          become: "{{ not ansible_check_mode }}"
+          ansible.builtin.file:
+            path: "{{ item }}"
+            state: absent
+          loop: "{{ homebrew_owned_paths + homebrew_user_paths }}"
+
+        # Deepest first; only succeeds on directories left empty, anything else stays.
+        - name: Delete now-empty directories created for Homebrew
+          become: "{{ not ansible_check_mode }}"
+          ansible.builtin.command:
+            argv: [rmdir, "{{ item }}"]
+            removes: "{{ item }}"
+          loop: "{{ homebrew_created_dirs | sort(reverse=true) }}"
+          register: homebrew_rmdir
+          failed_when: homebrew_rmdir.rc | default(0) != 0 and 'not empty' not in homebrew_rmdir.stderr | default('')
+
+        - name: Forget the Homebrew install record
+          ansible.builtin.file:
+            path: "{{ manifest_dir }}/homebrew.txt"
+            state: absent

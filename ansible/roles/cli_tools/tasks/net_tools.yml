@@ -3,9 +3,11 @@
   when: cli_tools_network_enable | bool
   block:
     - name: Install network tools
-      community.general.homebrew:
-        name: "{{ cli_tools_network_packages }}"
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: "{{ cli_tools_network_packages }}"
 
     - name: Install nixpkgs-only network tools
       ansible.builtin.include_role:

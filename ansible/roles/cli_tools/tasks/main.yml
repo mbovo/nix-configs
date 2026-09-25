@@ -1,4 +1,12 @@
 ---
+- name: Track files written by cli_tools
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ cli_tools_managed_files }}"
+  tags: [always]
+
 - name: Direnv
   ansible.builtin.import_tasks: direnv.yml
   tags: [direnv]

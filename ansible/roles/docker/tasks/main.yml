@@ -1,10 +1,19 @@
 ---
+- name: Track files written by docker
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ docker_managed_files }}"
+
 - name: Install Docker packages
-  community.general.homebrew:
-    name: >-
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: >-
       {{ ([docker_package] + (docker_darwin_packages if ansible_facts['system'] == 'Darwin' else []) if docker_enable | bool else [])
          + (docker_extra_packages if docker_extra_enable | bool else []) }}
-    state: present
   when: docker_enable | bool or docker_extra_enable | bool
 
 # nixpkgs docker ships compose/buildx as CLI plugins; expose the brew binaries the same way.

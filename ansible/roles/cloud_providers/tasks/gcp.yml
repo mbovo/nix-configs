@@ -3,9 +3,11 @@
   when: cloud_providers_gcp_enable | bool
   block:
     - name: Install Google Cloud SDK
-      community.general.homebrew_cask:
-        name: "{{ cloud_providers_gcp_cask }}"
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_casks: ["{{ cloud_providers_gcp_cask }}"]
 
     - name: Install gcloud components
       ansible.builtin.command:

@@ -1,0 +1,72 @@
+---
+# Remove every path Ansible wrote and put back what was there before.
+- name: Read tracked files
+  ansible.builtin.include_tasks: read.yml
+  vars:
+    manifest_kind: files
+
+- name: Keep tracked files
+  ansible.builtin.set_fact:
+    manifest_tracked_files: "{{ manifest_entries }}"
+
+- name: Read remembered symlinks
+  ansible.builtin.include_tasks: read.yml
+  vars:
+    manifest_kind: links
+
+- name: Parse remembered symlinks
+  ansible.builtin.set_fact:
+    manifest_links: "{{ manifest_entries | map('split', '\t') | list }}"
+
+- name: Remove files written by Ansible
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ manifest_tracked_files }}"
+
+- name: Look for backups
+  ansible.builtin.stat:
+    path: "{{ manifest_dir }}/backup{{ item }}"
+    follow: false
+  loop: "{{ manifest_tracked_files }}"
+  register: manifest_backup_stat
+
+- name: Restore backed up files
+  ansible.builtin.copy:
+    src: "{{ item.stat.path }}"
+    dest: "{{ item.item | dirname }}/"
+    remote_src: true
+    mode: preserve
+  loop: "{{ manifest_backup_stat.results | selectattr('stat.exists') | list }}"
+  loop_control:
+    label: "{{ item.item }}"
+
+- name: Restore symlinks
+  ansible.builtin.file:
+    src: "{{ item.1 }}"
+    dest: "{{ item.0 }}"
+    state: link
+    force: true
+  loop: "{{ manifest_links }}"
+  loop_control:
+    label: "{{ item.0 }} -> {{ item.1 }}"
+
+- name: Read directories created by Ansible
+  ansible.builtin.include_tasks: read.yml
+  vars:
+    manifest_kind: dirs
+
+# Deepest first; a directory that holds anything else is kept.
+- name: Remove now-empty directories created by Ansible
+  ansible.builtin.command:
+    argv: [rmdir, "{{ item }}"]
+    removes: "{{ item }}"
+  loop: "{{ manifest_entries | sort(reverse=true) }}"
+  register: manifest_rmdir
+  failed_when: manifest_rmdir.rc | default(0) != 0 and 'not empty' not in manifest_rmdir.stderr | default('')
+
+- name: Drop backups and file records
+  ansible.builtin.file:
+    path: "{{ manifest_dir }}/{{ item }}"
+    state: absent
+  loop: [backup, files.txt, links.txt, dirs.txt]

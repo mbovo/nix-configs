@@ -3,3 +3,8 @@ nixify_enable: false
 nixify_binary_file: ""
 # {relative dest under $HOME: source flake}
 nixify_config_files: {}
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+nixify_managed_files: >-
+  {{ ([home_directory ~ '/bin/nixify'] if nixify_enable | bool else [])
+     + nixify_config_files.keys() | map('regex_replace', '^', home_directory ~ '/') | list }}

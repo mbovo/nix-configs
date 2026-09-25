@@ -1,8 +1,10 @@
 ---
 - name: Install AWS CLI tools
-  community.general.homebrew:
-    name: "{{ [cloud_providers_aws_package] + cloud_providers_aws_extra_packages }}"
-    state: present
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: "{{ [cloud_providers_aws_package] + cloud_providers_aws_extra_packages }}"
   when: cloud_providers_aws_enable | bool
 
 - name: Deploy AWS config secret

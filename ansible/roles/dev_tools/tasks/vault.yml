@@ -1,6 +1,8 @@
 ---
 - name: Install Vault
-  community.general.homebrew:
-    name: "{{ dev_tools_vault_package }}"
-    state: present
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: ["{{ dev_tools_vault_package }}"]
   when: dev_tools_vault_enable | bool

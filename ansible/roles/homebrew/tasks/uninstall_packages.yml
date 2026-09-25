@@ -1,0 +1,105 @@
+---
+# Remove only the formulae/casks recorded in the manifest, i.e. installed by Ansible.
+- name: Read recorded casks
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: read.yml
+  vars:
+    manifest_kind: casks
+
+- name: Keep recorded casks
+  ansible.builtin.set_fact:
+    homebrew_uninstall_casks: "{{ manifest_entries }}"
+
+- name: Read recorded formulae
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: read.yml
+  vars:
+    manifest_kind: formulae
+
+- name: Keep recorded formulae
+  ansible.builtin.set_fact:
+    homebrew_uninstall_formulae: "{{ manifest_entries }}"
+
+- name: Show what will be removed
+  ansible.builtin.debug:
+    msg:
+      formulae: "{{ homebrew_uninstall_formulae }}"
+      casks: "{{ homebrew_uninstall_casks }}"
+
+- name: Remove casks
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ homebrew_uninstall_casks }}"
+  register: homebrew_uninstall_casks_result
+
+- name: Forget removed casks
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: forget.yml
+  vars:
+    manifest_kind: casks
+    manifest_items: "{{ homebrew_uninstall_casks_result.results | default([]) | map(attribute='item') | list }}"
+  when: not ansible_check_mode
+
+- name: Remove formulae
+  when: homebrew_uninstall_formulae | length > 0
+  block:
+    - name: Remove formulae in one go
+      community.general.homebrew:
+        name: "{{ homebrew_uninstall_formulae }}"
+        state: absent
+      register: homebrew_uninstall_batch
+
+    - name: Collect removed formulae
+      ansible.builtin.set_fact:
+        homebrew_uninstall_removed: "{{ homebrew_uninstall_formulae }}"
+  rescue:
+    # A formula still needed by something installed outside Ansible makes the batch fail.
+    - name: Remove formulae one by one
+      community.general.homebrew:
+        name: "{{ item }}"
+        state: absent
+      loop: "{{ homebrew_uninstall_formulae }}"
+      register: homebrew_uninstall_single
+      failed_when: false
+
+    - name: Collect removed formulae
+      ansible.builtin.set_fact:
+        homebrew_uninstall_removed: >-
+          {{ homebrew_uninstall_single.results | selectattr('changed_pkgs', 'defined') | map(attribute='item') | list }}
+
+    - name: Report formulae that were kept
+      ansible.builtin.debug:
+        msg: >-
+          Could not remove (still required by other formulae?):
+          {{ homebrew_uninstall_formulae | difference(homebrew_uninstall_removed) | join(', ') }}
+
+- name: Forget removed formulae
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: forget.yml
+  vars:
+    manifest_kind: formulae
+    manifest_items: "{{ homebrew_uninstall_removed | default([]) }}"
+  when: not ansible_check_mode
+
+- name: Remove taps pulled in by tapped formulae
+  community.general.homebrew_tap:
+    name: "{{ item }}"
+    state: absent
+  loop: >-
+    {{ homebrew_uninstall_formulae | select('search', '^[^/]+/[^/]+/[^/]+$')
+       | map('regex_replace', '/[^/]+$', '') | unique | list }}
+  register: homebrew_untap_result
+  # brew refuses to untap while other formulae from the tap are installed.
+  failed_when: false
+
+- name: Remove orphaned dependencies
+  ansible.builtin.command:
+    argv: "{{ [homebrew_prefix ~ '/bin/brew', 'autoremove'] + (['--dry-run'] if ansible_check_mode else []) }}"
+  register: homebrew_autoremove
+  changed_when: homebrew_autoremove.stdout | length > 0 and not ansible_check_mode
+  check_mode: false

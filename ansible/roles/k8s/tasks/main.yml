@@ -1,14 +1,23 @@
 ---
+- name: Track files written by k8s
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ k8s_managed_files }}"
+
 - name: Install Kubernetes clients
-  community.general.homebrew:
-    name: >-
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: >-
       {{ (k8s_packages if k8s_enable | bool else [])
          + (k8s_extra_packages if k8s_extra_enable | bool else [])
          + ([k8s_extra_clusterctl_package] if k8s_extra_clusterctl_enable | bool else [])
          + ([k8s_extra_kyverno_package] if k8s_extra_kyverno_enable | bool else [])
          + ([k8s_extra_fluxcd_package] if k8s_extra_fluxcd_enable | bool else [])
          + ([k8s_extra_argocd_package] if k8s_extra_argocd_enable | bool else []) }}
-    state: present
   when: >-
     k8s_enable | bool or k8s_extra_enable | bool or k8s_extra_clusterctl_enable | bool
     or k8s_extra_kyverno_enable | bool or k8s_extra_fluxcd_enable | bool or k8s_extra_argocd_enable | bool

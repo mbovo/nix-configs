@@ -1,0 +1,8 @@
+---
+# Expects manifest_kind and manifest_items.
+- name: "Forget removed {{ manifest_kind }}"
+  ansible.builtin.lineinfile:
+    path: "{{ manifest_dir }}/{{ manifest_kind }}.txt"
+    line: "{{ item }}"
+    state: absent
+  loop: "{{ manifest_items }}"

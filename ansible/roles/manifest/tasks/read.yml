@@ -1,0 +1,18 @@
+---
+# Expects manifest_kind; sets manifest_entries.
+- name: Look for the manifest of {{ manifest_kind }}
+  ansible.builtin.stat:
+    path: "{{ manifest_dir }}/{{ manifest_kind }}.txt"
+  register: manifest_file_stat
+
+- name: Read the manifest of {{ manifest_kind }}
+  ansible.builtin.slurp:
+    src: "{{ manifest_dir }}/{{ manifest_kind }}.txt"
+  register: manifest_file_content
+  when: manifest_file_stat.stat.exists
+
+- name: Parse the manifest of {{ manifest_kind }}
+  ansible.builtin.set_fact:
+    manifest_entries: >-
+      {{ (manifest_file_content.content | b64decode).splitlines() | map('trim') | select | list
+         if manifest_file_stat.stat.exists else [] }}

@@ -3,11 +3,13 @@
   when: cli_tools_gnu_enable | bool
   block:
     - name: Install GNU tools
-      community.general.homebrew:
-        name: >-
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: >-
           {{ cli_tools_gnu_packages
              + (cli_tools_gnu_darwin_packages if ansible_facts['system'] == 'Darwin' else []) }}
-        state: present
 
     - name: Put unprefixed GNU binaries on PATH
       ansible.builtin.blockinfile:

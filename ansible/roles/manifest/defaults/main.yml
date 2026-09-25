@@ -1,0 +1,3 @@
+---
+# What Ansible installed (not what was already there); read by the uninstall playbook.
+manifest_dir: "{{ home_directory }}/.local/state/nix-configs-ansible"

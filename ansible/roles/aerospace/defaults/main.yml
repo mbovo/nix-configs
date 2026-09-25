@@ -2,3 +2,8 @@
 aerospace_enable: false
 aerospace_config_file: ""
 aerospace_scratchpad_file: ""
+
+# Paths this role writes (backed up before the first write, restored on uninstall).
+aerospace_managed_files: >-
+  {{ [home_directory ~ '/.config/aerospace/aerospace.toml', home_directory ~ '/bin/scratchpad.sh']
+     if aerospace_enable | bool else [] }}

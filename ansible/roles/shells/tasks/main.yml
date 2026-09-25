@@ -1,4 +1,12 @@
 ---
+- name: Track files written by shells
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ shells_managed_files }}"
+  tags: [always]
+
 - name: Zsh
   ansible.builtin.import_tasks: zsh.yml
   tags: [zsh]

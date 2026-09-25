@@ -1,6 +1,8 @@
 ---
 - name: Install Nerd Fonts
-  community.general.homebrew_cask:
-    name: "{{ fonts_nerd_fonts_casks }}"
-    state: present
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_casks: "{{ fonts_nerd_fonts_casks }}"
   when: fonts_nerd_fonts_enable | bool

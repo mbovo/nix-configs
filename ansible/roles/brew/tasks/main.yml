@@ -1,4 +1,11 @@
 ---
+- name: Track files written by brew
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: track_files.yml
+  vars:
+    manifest_files: "{{ brew_managed_files }}"
+
 # Like the nix module this only places the Brewfile; `brew bundle` stays a manual step.
 - name: Place Brewfile
   when: brew_enable | bool

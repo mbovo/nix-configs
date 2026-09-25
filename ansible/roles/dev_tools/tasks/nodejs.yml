@@ -3,9 +3,11 @@
   when: dev_tools_nodejs_enable | bool
   block:
     - name: Install Node.js
-      community.general.homebrew:
-        name: "{{ dev_tools_nodejs_package }}"
-        state: present
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_formulae: ["{{ dev_tools_nodejs_package }}"]
 
     - name: Link keg-only Node.js into the prefix
       ansible.builtin.command:

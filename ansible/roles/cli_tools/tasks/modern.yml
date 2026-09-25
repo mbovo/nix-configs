@@ -1,7 +1,10 @@
 ---
 - name: Install modern CLI tools
-  community.general.homebrew:
-    name: >-
+  ansible.builtin.include_role:
+    name: homebrew
+    tasks_from: packages.yml
+  vars:
+    homebrew_formulae: >-
       {{ ([cli_tools_modern_bat_package] + cli_tools_modern_bat_extra_packages if cli_tools_modern_bat_enable | bool else [])
          + ([cli_tools_modern_yazi_package] if cli_tools_modern_yazi_enable | bool else [])
          + ([cli_tools_modern_eza_package] if cli_tools_modern_eza_enable | bool else [])
@@ -10,7 +13,6 @@
          + ([cli_tools_modern_jq_package] if cli_tools_modern_jq_enable | bool else [])
          + ([cli_tools_modern_fd_package] if cli_tools_modern_fd_enable | bool else [])
          + (cli_tools_modern_extra_packages if cli_tools_modern_extra_enable | bool else []) }}
-    state: present
 
 - name: Configure bat
   when: cli_tools_modern_bat_enable | bool

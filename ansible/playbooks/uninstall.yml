@@ -1,0 +1,89 @@
+---
+# Reverts site.yml + bootstrap.yml using the manifest: only what Ansible installed or wrote is removed,
+# and files that existed before Ansible first overwrote them are restored.
+# Dry run: add --check --diff. Removing Homebrew itself needs sudo: add -K.
+- name: Uninstall the user environment
+  hosts: all
+  gather_facts: true
+  pre_tasks:
+    - name: Ensure the play runs as the configured user
+      ansible.builtin.assert:
+        that: ansible_facts['user_id'] == home_username
+        fail_msg: "Run as {{ home_username }} (current: {{ ansible_facts['user_id'] }}); use -l to pick the right host."
+        quiet: true
+      tags: [always]
+
+    - name: Check for Homebrew
+      ansible.builtin.stat:
+        path: "{{ homebrew_prefix }}/bin/brew"
+      register: uninstall_brew
+      tags: [always]
+  tasks:
+    - name: Load host overrides
+      ansible.builtin.import_role:
+        name: priv_config
+        tasks_from: load_vars.yml
+      tags: [always]
+
+    - name: Remove pdh
+      ansible.builtin.import_role:
+        name: pdh
+        tasks_from: uninstall.yml
+      tags: [pdh]
+
+    - name: Remove Python modules added to Homebrew's python
+      ansible.builtin.import_role:
+        name: dev_tools
+        tasks_from: uninstall.yml
+      tags: [dev_tools]
+
+    - name: Remove gnubin PATH entries
+      ansible.builtin.import_role:
+        name: cli_tools
+        tasks_from: uninstall.yml
+      tags: [cli_tools]
+
+    - name: Remove written files and restore the originals
+      ansible.builtin.import_role:
+        name: manifest
+        tasks_from: restore_files.yml
+      tags: [files]
+
+    - name: Remove nix profile packages
+      ansible.builtin.import_role:
+        name: nix_profile
+        tasks_from: uninstall.yml
+      tags: [packages]
+
+    - name: Remove Homebrew packages
+      ansible.builtin.import_role:
+        name: homebrew
+        tasks_from: uninstall_packages.yml
+      when: uninstall_brew.stat.exists
+      tags: [packages]
+
+    - name: Remove Homebrew
+      ansible.builtin.import_role:
+        name: homebrew
+        tasks_from: uninstall.yml
+      tags: [homebrew]
+
+    - name: List what is left in the manifest
+      ansible.builtin.find:
+        paths: "{{ manifest_dir }}"
+        file_type: any
+      register: uninstall_manifest_left
+      tags: [always]
+
+    - name: Delete the empty manifest directory
+      ansible.builtin.file:
+        path: "{{ manifest_dir }}"
+        state: absent
+      when: uninstall_manifest_left.matched == 0
+      tags: [always]
+
+    - name: Report leftovers
+      ansible.builtin.debug:
+        msg: "Still recorded in {{ manifest_dir }}: {{ uninstall_manifest_left.files | map(attribute='path') | map('basename') | list }}"
+      when: uninstall_manifest_left.matched > 0
+      tags: [always]
