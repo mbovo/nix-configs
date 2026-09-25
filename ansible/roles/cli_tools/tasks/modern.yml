@@ -1,0 +1,43 @@
+---
+- name: Install modern CLI tools
+  community.general.homebrew:
+    name: >-
+      {{ ([cli_tools_modern_bat_package] + cli_tools_modern_bat_extra_packages if cli_tools_modern_bat_enable | bool else [])
+         + ([cli_tools_modern_yazi_package] if cli_tools_modern_yazi_enable | bool else [])
+         + ([cli_tools_modern_eza_package] if cli_tools_modern_eza_enable | bool else [])
+         + ([cli_tools_modern_fzf_package] if cli_tools_modern_fzf_enable | bool else [])
+         + ([cli_tools_modern_ripgrep_package] if cli_tools_modern_ripgrep_enable | bool else [])
+         + ([cli_tools_modern_jq_package] if cli_tools_modern_jq_enable | bool else [])
+         + ([cli_tools_modern_fd_package] if cli_tools_modern_fd_enable | bool else [])
+         + (cli_tools_modern_extra_packages if cli_tools_modern_extra_enable | bool else []) }}
+    state: present
+
+- name: Configure bat
+  when: cli_tools_modern_bat_enable | bool
+  block:
+    - name: Create bat config directory
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.config/bat"
+        state: directory
+        mode: "0755"
+
+    - name: Write bat config
+      ansible.builtin.copy:
+        content: "--theme='{{ cli_tools_modern_bat_theme }}'\n"
+        dest: "{{ home_directory }}/.config/bat/config"
+        mode: "0644"
+
+- name: Configure yazi
+  when: cli_tools_modern_yazi_enable | bool
+  block:
+    - name: Create yazi config directory
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.config/yazi"
+        state: directory
+        mode: "0755"
+
+    - name: Write yazi.toml
+      ansible.builtin.copy:
+        src: yazi.toml
+        dest: "{{ home_directory }}/.config/yazi/yazi.toml"
+        mode: "0644"

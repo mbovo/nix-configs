@@ -1,0 +1,13 @@
+---
+- name: Install WezTerm
+  community.general.homebrew_cask:
+    name: "{{ shells_wezterm_cask }}"
+    state: present
+  when: shells_wezterm_enable | bool
+
+- name: Copy wezterm.lua
+  ansible.builtin.copy:
+    src: "{{ shells_wezterm_config_file }}"
+    dest: "{{ home_directory }}/.wezterm.lua"
+    mode: "0644"
+  when: shells_wezterm_config_file | length > 0

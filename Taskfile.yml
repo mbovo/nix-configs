@@ -32,3 +32,31 @@ tasks:
     desc: Reset dev environment
     cmds:
       - rm -rf .venv .task
+
+  ansible:setup:
+    desc: Create the ansible virtualenv and install collections
+    dir: ansible
+    cmds:
+      - ./bootstrap.sh
+
+  ansible:bootstrap:
+    desc: "Install Homebrew, private config and sops (HOST=<inventory host>, asks for sudo)"
+    dir: ansible
+    requires:
+      vars: [HOST]
+    cmds:
+      - .venv/bin/ansible-playbook playbooks/bootstrap.yml -l {{.HOST}} -K {{.CLI_ARGS}}
+
+  ansible:apply:
+    desc: "Apply the configuration (HOST=<inventory host>)"
+    dir: ansible
+    requires:
+      vars: [HOST]
+    cmds:
+      - .venv/bin/ansible-playbook playbooks/site.yml -l {{.HOST}} {{.CLI_ARGS}}
+
+  ansible:lint:
+    desc: Lint the ansible code
+    dir: ansible
+    cmds:
+      - .venv/bin/ansible-lint playbooks/

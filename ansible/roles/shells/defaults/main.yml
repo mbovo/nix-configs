@@ -1,0 +1,25 @@
+---
+# zsh.nix (oh-my-zsh has no Homebrew formula; it is cloned instead)
+shells_zsh_enable: false
+shells_zsh_packages: [zsh, powerlevel10k, atuin]
+shells_zsh_ohmyzsh_repo: https://github.com/ohmyzsh/ohmyzsh.git
+shells_zsh_ohmyzsh_version: master
+shells_zsh_ohmyzsh_dir: "{{ home_directory }}/.local/share/oh-my-zsh"
+# Dotfiles to place in $HOME: {relative dest: source}
+shells_zsh_extra_files: {}
+# Literal rewrites of ~/.nix-profile paths inside those dotfiles.
+shells_zsh_path_rewrites:
+  $HOME/.nix-profile/share/oh-my-zsh/: "{{ shells_zsh_ohmyzsh_dir }}/"
+  $HOME/.nix-profile/share/zsh-powerlevel10k/powerlevel10k.zsh-theme: "{{ homebrew_prefix }}/share/powerlevel10k/powerlevel10k.zsh-theme"
+
+# atuin.nix
+shells_atuin_enable: false
+shells_atuin_package: atuin
+shells_atuin_config: ""
+# sops-encrypted (binary) atuin key -> ~/.local/share/atuin/key
+shells_atuin_key: ""
+
+# wezterm.nix
+shells_wezterm_enable: false
+shells_wezterm_cask: wezterm
+shells_wezterm_config_file: ""

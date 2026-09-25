@@ -1,0 +1,16 @@
+[project]
+name = "nix-configs-ansible"
+version = "0.1.0"
+description = "Ansible port of the home-manager configuration (brew + sops/age)"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "ansible-core (>=2.21,<2.22)",
+  # cryptography >=49 ships no Intel macOS wheel (would need Rust + OpenSSL to build); 48.x has universal2.
+  "cryptography (>=46,<49) ; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.group.dev.dependencies]
+ansible-lint = ">=25"

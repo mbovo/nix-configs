@@ -1,0 +1,25 @@
+---
+- name: Create nixify directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: >-
+    {{ ((nixify_config_files.keys() | map('regex_replace', '^', home_directory ~ '/') | map('dirname') | list)
+        + ([home_directory ~ '/bin'] if nixify_enable | bool else [])) | unique }}
+
+- name: Install nixify
+  ansible.builtin.copy:
+    src: "{{ nixify_binary_file }}"
+    dest: "{{ home_directory }}/bin/nixify"
+    mode: "0755"
+  when: nixify_enable | bool
+
+- name: Place nixify flakes
+  ansible.builtin.copy:
+    src: "{{ item.value }}"
+    dest: "{{ home_directory }}/{{ item.key }}"
+    mode: "0644"
+  loop: "{{ nixify_config_files | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"

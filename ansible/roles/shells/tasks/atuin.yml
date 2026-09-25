@@ -1,0 +1,49 @@
+---
+- name: Configure atuin
+  when: shells_atuin_enable | bool
+  block:
+    - name: Install atuin
+      community.general.homebrew:
+        name: "{{ shells_atuin_package }}"
+        state: present
+
+    - name: Generate atuin init script
+      ansible.builtin.command:
+        argv: ["{{ homebrew_prefix }}/bin/atuin", init, zsh, --disable-up-arrow]
+      register: shells_atuin_init
+      changed_when: false
+      check_mode: false
+      failed_when: false
+
+    - name: Write ~/.atuin.zsh
+      ansible.builtin.copy:
+        content: "{{ shells_atuin_init.stdout }}\n"
+        dest: "{{ home_directory }}/.atuin.zsh"
+        mode: "0644"
+      when: shells_atuin_init.rc | default(1) == 0
+
+- name: Deploy atuin key secret
+  ansible.builtin.include_role:
+    name: sops
+    tasks_from: secret.yml
+  vars:
+    sops_secret:
+      name: atuin
+      sops_file: "{{ shells_atuin_key }}"
+      path: "{{ home_directory }}/.local/share/atuin/key"
+  when: shells_atuin_key | length > 0
+
+- name: Place atuin config
+  when: shells_atuin_config | length > 0
+  block:
+    - name: Create atuin config directory
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.config/atuin"
+        state: directory
+        mode: "0755"
+
+    - name: Copy atuin config.toml
+      ansible.builtin.copy:
+        src: "{{ shells_atuin_config }}"
+        dest: "{{ home_directory }}/.config/atuin/config.toml"
+        mode: "0644"

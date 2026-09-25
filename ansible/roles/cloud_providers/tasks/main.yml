@@ -1,0 +1,8 @@
+---
+- name: AWS
+  ansible.builtin.import_tasks: aws.yml
+  tags: [aws]
+
+- name: GCP
+  ansible.builtin.import_tasks: gcp.yml
+  tags: [gcp]

@@ -1,0 +1,14 @@
+---
+# aws.nix
+cloud_providers_aws_enable: false
+cloud_providers_aws_package: awscli
+cloud_providers_aws_extra_packages: [eksctl, steampipe]
+# sops-encrypted (binary) file decrypted to ~/.aws/config
+cloud_providers_aws_extra_config: ""
+
+# gcp.nix
+cloud_providers_gcp_enable: false
+cloud_providers_gcp_cask: gcloud-cli
+cloud_providers_gcp_components: [gke-gcloud-auth-plugin]
+
+# azure.nix / digitalocean.nix are empty modules in the nix tree.

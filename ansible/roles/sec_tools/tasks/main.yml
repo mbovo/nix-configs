@@ -1,0 +1,8 @@
+---
+- name: Install security tools
+  community.general.homebrew:
+    name: >-
+      {{ (sec_tools_packages if sec_tools_enable | bool else [])
+         + (sec_tools_extra_packages if sec_tools_extra_enable | bool else []) }}
+    state: present
+  when: sec_tools_enable | bool or sec_tools_extra_enable | bool

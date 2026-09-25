@@ -1,0 +1,5 @@
+---
+priv_config_enable: true
+priv_config_update: true
+# Host overrides (ansible counterpart of nix-configs-priv/hosts/<hostname>/default.nix).
+priv_config_vars_file: "{{ priv_config_dir }}/hosts/{{ inventory_hostname }}/ansible.yml"

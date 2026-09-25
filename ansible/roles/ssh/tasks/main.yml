@@ -1,0 +1,15 @@
+---
+- name: Configure ssh
+  when: ssh_enable | bool
+  block:
+    - name: Create ~/.ssh
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.ssh"
+        state: directory
+        mode: "0700"
+
+    - name: Write ~/.ssh/config
+      ansible.builtin.template:
+        src: ssh_config.j2
+        dest: "{{ home_directory }}/.ssh/config"
+        mode: "0600"

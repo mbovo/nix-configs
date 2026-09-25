@@ -1,0 +1,21 @@
+---
+- name: Configure network tools
+  when: cli_tools_network_enable | bool
+  block:
+    - name: Install network tools
+      community.general.homebrew:
+        name: "{{ cli_tools_network_packages }}"
+        state: present
+
+    - name: Install nixpkgs-only network tools
+      ansible.builtin.include_role:
+        name: nix_profile
+      vars:
+        nix_profile_packages: "{{ cli_tools_network_nix_packages }}"
+
+    - name: Link tmux.conf
+      ansible.builtin.copy:
+        src: "{{ cli_tools_network_tmux_config_file }}"
+        dest: "{{ home_directory }}/.tmux.conf"
+        mode: "0644"
+      when: cli_tools_network_tmux_config_file | length > 0

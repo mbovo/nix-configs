@@ -1,0 +1,5 @@
+---
+sops_packages: [sops, age]
+# sops-nix `sops.secrets` equivalent; each item: {name, sops_file, path, format (binary|yaml|json|dotenv|ini), mode}.
+sops_secrets: []
+sops_secret_default_mode: "0400"

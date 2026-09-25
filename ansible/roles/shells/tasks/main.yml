@@ -1,0 +1,12 @@
+---
+- name: Zsh
+  ansible.builtin.import_tasks: zsh.yml
+  tags: [zsh]
+
+- name: Atuin
+  ansible.builtin.import_tasks: atuin.yml
+  tags: [atuin]
+
+- name: WezTerm
+  ansible.builtin.import_tasks: wezterm.yml
+  tags: [wezterm]

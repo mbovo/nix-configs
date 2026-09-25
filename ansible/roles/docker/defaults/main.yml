@@ -1,0 +1,12 @@
+---
+docker_enable: false
+docker_package: docker
+docker_darwin_packages: [qemu]
+docker_extra_enable: "{{ docker_enable }}"
+docker_extra_packages: [docker-compose, docker-buildx, dive]
+docker_cli_plugins: [docker-compose, docker-buildx]
+# Plain file linked to ~/.docker/daemon.json
+docker_config_daemon: ""
+# sops-encrypted (binary) file decrypted to ~/.docker/config.json
+docker_config_file: ""
+docker_colima_ssh_config: "{{ home_directory }}/.colima/ssh_config"

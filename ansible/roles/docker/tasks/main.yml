@@ -1,0 +1,56 @@
+---
+- name: Install Docker packages
+  community.general.homebrew:
+    name: >-
+      {{ ([docker_package] + (docker_darwin_packages if ansible_facts['system'] == 'Darwin' else []) if docker_enable | bool else [])
+         + (docker_extra_packages if docker_extra_enable | bool else []) }}
+    state: present
+  when: docker_enable | bool or docker_extra_enable | bool
+
+# nixpkgs docker ships compose/buildx as CLI plugins; expose the brew binaries the same way.
+- name: Expose docker CLI plugins
+  when: docker_enable | bool and docker_extra_enable | bool
+  block:
+    - name: Create ~/.docker/cli-plugins
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.docker/cli-plugins"
+        state: directory
+        mode: "0755"
+
+    - name: Link docker CLI plugins
+      ansible.builtin.file:
+        src: "{{ homebrew_prefix }}/opt/{{ item }}/bin/{{ item }}"
+        dest: "{{ home_directory }}/.docker/cli-plugins/{{ item }}"
+        state: link
+        force: true
+      loop: "{{ docker_extra_packages | select('in', docker_cli_plugins) | list }}"
+
+- name: Remember the colima ssh include for the ssh role
+  ansible.builtin.set_fact:
+    docker_ssh_includes: "{{ [docker_colima_ssh_config] if docker_enable | bool and ansible_facts['system'] == 'Darwin' else [] }}"
+
+- name: Link Docker daemon.json
+  when: docker_config_daemon | length > 0
+  block:
+    - name: Create ~/.docker
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.docker"
+        state: directory
+        mode: "0755"
+
+    - name: Copy daemon.json
+      ansible.builtin.copy:
+        src: "{{ docker_config_daemon }}"
+        dest: "{{ home_directory }}/.docker/daemon.json"
+        mode: "0644"
+
+- name: Deploy Docker config secret
+  ansible.builtin.include_role:
+    name: sops
+    tasks_from: secret.yml
+  vars:
+    sops_secret:
+      name: dockerconfig
+      sops_file: "{{ docker_config_file }}"
+      path: "{{ home_directory }}/.docker/config.json"
+  when: docker_config_file | length > 0

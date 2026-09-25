@@ -1,0 +1,15 @@
+---
+- name: Install pdh
+  when: pdh_enable | bool
+  block:
+    - name: Install pipx
+      community.general.homebrew:
+        name: pipx
+        state: present
+
+    - name: Install pdh with pipx
+      community.general.pipx:
+        name: pdh
+        source: "{{ pdh_spec }}"
+        state: present
+        executable: "{{ homebrew_prefix }}/bin/pipx"

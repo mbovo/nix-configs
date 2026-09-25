@@ -1,0 +1,80 @@
+---
+git_enable: false
+git_package: git
+git_extra_enable: "{{ git_enable }}"
+git_extra_packages: [act, git-delta, gitleaks, colordiff]
+git_config_username: User Name
+git_config_email: user@email.tld
+git_config_gitignore_global: ""
+git_extra_config_signing_key: "~/.ssh/id_ed25519.pub"
+# home-manager writes programs.git to the XDG location
+git_config_path: "{{ home_directory }}/.config/git/config"
+
+git_settings:
+  alias:
+    root: rev-parse --show-toplevel
+    oops: commit --amend --no-edit
+    daje: push --force-with-lease
+  user:
+    name: "{{ git_config_username }}"
+    email: "{{ git_config_email }}"
+    signingKey: "{{ git_extra_config_signing_key }}"
+  commit:
+    gpgSign: "true"
+  gpg:
+    format: ssh
+  core:
+    pager: ""
+    excludesfile: "{{ home_directory }}/.gitignore_global"
+    quotepath: false
+    commitGraph: true
+  help:
+    autocorrect: 20
+  push:
+    autoSetupRemote: "true"
+    followTags: "true"
+  pull:
+    rebase: "false"
+  fetch:
+    prune: "true"
+    pruneTags: "true"
+    all: "true"
+  rebase:
+    autoStash: "true"
+    updateRefs: "true"
+    autoSquash: "true"
+  init:
+    defaultBranch: main
+  tag:
+    sort: version:refname
+  branch:
+    sort: -committerdate
+  column:
+    ui: auto
+  gc:
+    writeCommitGraph: "true"
+  color:
+    ui: "true"
+    status: "{{ git_color_scheme }}"
+    pull: "{{ git_color_scheme }}"
+    push: "{{ git_color_scheme }}"
+
+git_color_scheme:
+  changed: yellow normal bold
+  untracked: cyan
+  added: green
+  modified: red blink
+  header: white normal
+
+git_gh_enable: "{{ git_enable }}"
+git_gh_package: gh
+git_gh_credential_hosts: [https://github.com, https://gist.github.com]
+git_gh_settings:
+  git_protocol: ssh
+  pager: ""
+  editor: ""
+  aliases:
+    co: '!id="$(gh pr list -L100 | fzf | cut -f1)"; [ -n "$id" ] && gh pr checkout "$id"'
+    pl: pr list
+    pv: pr view
+    pw: pr view --web

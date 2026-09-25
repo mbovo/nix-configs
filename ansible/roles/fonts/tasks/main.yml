@@ -1,0 +1,6 @@
+---
+- name: Install Nerd Fonts
+  community.general.homebrew_cask:
+    name: "{{ fonts_nerd_fonts_casks }}"
+    state: present
+  when: fonts_nerd_fonts_enable | bool

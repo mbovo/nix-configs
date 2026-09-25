@@ -1,0 +1,7 @@
+---
+# EDITOR=nvim is exported by the zshrc dotfile.
+- name: Install editor
+  community.general.homebrew:
+    name: "{{ cli_tools_editor_package }}"
+    state: present
+  when: cli_tools_editor_enable | bool

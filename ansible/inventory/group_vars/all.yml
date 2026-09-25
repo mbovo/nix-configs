@@ -1,0 +1,23 @@
+---
+# Shared defaults (hosts/default.nix + hosts/loader.nix).
+home_base_paths:
+  Darwin: /Users/
+  Linux: /home/
+home_directory: "{{ home_base_paths[ansible_facts['system']] }}{{ home_username }}"
+
+# Homebrew's fixed prefixes: Apple Silicon, Intel macOS, Linux.
+homebrew_prefix: >-
+  {{ ('/opt/homebrew' if ansible_facts['architecture'] == 'arm64' else '/usr/local')
+     if ansible_facts['system'] == 'Darwin' else '/home/linuxbrew/.linuxbrew' }}
+
+# Dotfiles and flakes live in the repo's config/ directory (same sources home-manager used).
+config_dir: "{{ (inventory_dir ~ '/../../config') | realpath }}"
+
+# nix-configs-priv flake input.
+priv_config_repo: git@github.com:mbovo/nix-configs-priv.git
+priv_config_version: main
+priv_config_dir: "{{ home_directory }}/.local/share/nix-configs-priv"
+
+# sops-nix: age key used to decrypt secrets; consumed by the community.sops lookup too.
+sops_age_keyfile: "{{ home_directory }}/.config/sops/age/keys.txt"
+sops_binary: "{{ homebrew_prefix }}/bin/sops"

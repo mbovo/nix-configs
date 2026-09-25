@@ -1,0 +1,39 @@
+---
+# Same layout the official install.sh creates when the repository is not the prefix root (Intel macOS, Linux).
+homebrew_prefix_subdirs:
+  - bin
+  - etc
+  - etc/bash_completion.d
+  - include
+  - lib
+  - lib/pkgconfig
+  - sbin
+  - share
+  - share/aclocal
+  - share/doc
+  - share/info
+  - share/locale
+  - share/man
+  - share/man/man1
+  - share/man/man2
+  - share/man/man3
+  - share/man/man4
+  - share/man/man5
+  - share/man/man6
+  - share/man/man7
+  - share/man/man8
+  - share/zsh
+  - share/zsh/site-functions
+  - opt
+  - var
+  - var/homebrew
+  - var/homebrew/linked
+  - var/log
+  - Cellar
+  - Caskroom
+  - Frameworks
+  - Homebrew
+
+homebrew_directories: >-
+  {{ [homebrew_prefix] if homebrew_repository == homebrew_prefix
+     else homebrew_prefix_subdirs | map('regex_replace', '^', homebrew_prefix ~ '/') | list }}

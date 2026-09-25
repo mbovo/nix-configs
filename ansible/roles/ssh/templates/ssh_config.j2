@@ -1,0 +1,16 @@
+# {{ ansible_managed }}
+{% for key, value in ssh_extra_option_overrides | dictsort %}
+{{ key }} {{ value }}
+{% endfor %}
+{% for include in ssh_includes + (docker_ssh_includes | default([])) %}
+Include {{ include }}
+{% endfor %}
+{% for name, block in ssh_match_blocks | dictsort %}
+
+{{ ('Match ' ~ block.match) if block.match is defined else ('Host ' ~ name) }}
+{% for key, value in block | dictsort if key != 'match' %}
+{% for v in (value if value is sequence and value is not string else [value]) %}
+  {{ key }} {{ ('yes' if v else 'no') if v is boolean else v }}
+{% endfor %}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,14 @@
+---
+- name: Configure nix utilities
+  when: cli_tools_nix_utils_enable | bool
+  block:
+    - name: Install nix utilities from Homebrew
+      community.general.homebrew:
+        name: "{{ cli_tools_nix_utils_packages }}"
+        state: present
+
+    - name: Install nixpkgs-only nix utilities
+      ansible.builtin.include_role:
+        name: nix_profile
+      vars:
+        nix_profile_packages: "{{ cli_tools_nix_utils_nix_packages }}"

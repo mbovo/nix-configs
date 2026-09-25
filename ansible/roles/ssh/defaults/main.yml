@@ -1,0 +1,9 @@
+---
+ssh_enable: false
+ssh_extra_option_overrides:
+  PubkeyAcceptedKeyTypes: +ssh-rsa
+  HostKeyAlgorithms: +ssh-rsa
+ssh_includes: []
+# programs.ssh.matchBlocks equivalent: {"<host pattern>": {<ssh_config keyword>: value}}.
+# A block may set `match: "<criteria>"` to render `Match` instead of `Host`.
+ssh_match_blocks: {}

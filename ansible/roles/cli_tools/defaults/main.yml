@@ -1,0 +1,53 @@
+---
+# direnv.nix
+cli_tools_direnv_enable: false
+cli_tools_direnv_package: direnv
+cli_tools_direnv_nix_package: nix-direnv
+cli_tools_direnv_config: |
+  [global]
+  hide_env_diff = true
+  warn_timeout = "10s"
+
+# editor.nix
+cli_tools_editor_enable: false
+cli_tools_editor_package: neovim
+
+# gnu.nix
+cli_tools_gnu_enable: false
+cli_tools_gnu_packages: [bash, tree, htop]
+cli_tools_gnu_darwin_packages: [gawk, watch, wget, less, gnu-which]
+# Unprefixed GNU names like nix provides (brew installs gawk/gwhich by default).
+cli_tools_gnu_gnubin_formulae: [gawk, gnu-which]
+
+# modern.nix (+ modern/bat.nix, modern/yazi.nix)
+cli_tools_modern_bat_enable: false
+cli_tools_modern_bat_package: bat
+cli_tools_modern_bat_theme: Monokai Extended
+cli_tools_modern_bat_extra_packages: [bat-extras]
+cli_tools_modern_yazi_enable: false
+cli_tools_modern_yazi_package: yazi
+cli_tools_modern_eza_enable: false
+cli_tools_modern_eza_package: eza
+cli_tools_modern_fzf_enable: false
+cli_tools_modern_fzf_package: fzf
+cli_tools_modern_ripgrep_enable: false
+cli_tools_modern_ripgrep_package: ripgrep
+cli_tools_modern_jq_enable: false
+cli_tools_modern_jq_package: jq
+cli_tools_modern_fd_enable: false
+cli_tools_modern_fd_package: fd
+cli_tools_modern_extra_enable: false
+cli_tools_modern_extra_packages: []
+# nixpkgs yq is the python jq wrapper -> python-yq; devbox comes from its official tap.
+cli_tools_modern_extra_default_packages: [glow, asciinema, jetify-com/devbox/devbox, python-yq]
+
+# net-tools.nix (hping is nixpkgs-only)
+cli_tools_network_enable: false
+cli_tools_network_packages: [wget, curl, mtr, nmap, iperf, tmux]
+cli_tools_network_nix_packages: [hping]
+cli_tools_network_tmux_config_file: ""
+
+# nix.nix (statix is the only one packaged by Homebrew)
+cli_tools_nix_utils_enable: false
+cli_tools_nix_utils_packages: [statix]
+cli_tools_nix_utils_nix_packages: [nix-diff, nvd, nil, nix-output-monitor]

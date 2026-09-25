@@ -1,0 +1,31 @@
+---
+- name: Configure zsh
+  when: shells_zsh_enable | bool
+  block:
+    - name: Install zsh packages
+      community.general.homebrew:
+        name: "{{ shells_zsh_packages }}"
+        state: present
+
+    - name: Install oh-my-zsh
+      ansible.builtin.git:
+        repo: "{{ shells_zsh_ohmyzsh_repo }}"
+        dest: "{{ shells_zsh_ohmyzsh_dir }}"
+        version: "{{ shells_zsh_ohmyzsh_version }}"
+        depth: 1
+
+- name: Create dotfile directories
+  ansible.builtin.file:
+    path: "{{ (home_directory ~ '/' ~ item) | dirname }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ shells_zsh_extra_files.keys() | select('search', '/') | list }}"
+
+- name: Place zsh dotfiles
+  ansible.builtin.template:
+    src: dotfile.j2
+    dest: "{{ home_directory }}/{{ item.key }}"
+    mode: "0644"
+  loop: "{{ shells_zsh_extra_files | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"

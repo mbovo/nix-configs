@@ -1,0 +1,5 @@
+---
+# The nix pdh module exists but is not imported by any host.
+pdh_enable: false
+pdh_rev: 52844e2318f69e4c629b4041e621e2ae58e1ef16
+pdh_spec: "git+https://github.com/mbovo/pdh@{{ pdh_rev }}"

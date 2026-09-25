@@ -1,0 +1,60 @@
+---
+# Equivalent of `home-manager switch --flake .#<user>@<host>`.
+- name: Configure the user environment
+  hosts: all
+  gather_facts: true
+  pre_tasks:
+    - name: Ensure the play runs as the configured user
+      ansible.builtin.assert:
+        that: ansible_facts['user_id'] == home_username
+        fail_msg: "Run as {{ home_username }} (current: {{ ansible_facts['user_id'] }}); use -l to pick the right host."
+        quiet: true
+      tags: [always]
+
+    - name: Require Homebrew
+      ansible.builtin.stat:
+        path: "{{ homebrew_prefix }}/bin/brew"
+      register: site_brew
+      tags: [always]
+
+    - name: Stop when Homebrew is missing
+      ansible.builtin.assert:
+        that: site_brew.stat.exists
+        fail_msg: "Homebrew not found in {{ homebrew_prefix }}: run playbooks/bootstrap.yml -K first."
+        quiet: true
+      tags: [always]
+  roles:
+    # Loads host overrides from nix-configs-priv, so it must stay first.
+    - role: priv_config
+      tags: [always]
+    - role: sops
+      tags: [sops]
+    - role: cli_tools
+      tags: [cli_tools]
+    - role: sec_tools
+      tags: [sec_tools]
+    - role: git
+      tags: [git]
+    - role: shells
+      tags: [shells]
+    - role: fonts
+      tags: [fonts]
+    - role: dev_tools
+      tags: [dev_tools]
+    - role: cloud_providers
+      tags: [cloud_providers]
+    - role: docker
+      tags: [docker]
+    - role: k8s
+      tags: [k8s]
+    - role: nixify
+      tags: [nixify]
+    - role: brew
+      tags: [brew]
+    - role: aerospace
+      tags: [aerospace]
+    - role: pdh
+      tags: [pdh]
+    # Needs the docker role's colima include.
+    - role: ssh
+      tags: [ssh]

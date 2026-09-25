@@ -1,0 +1,14 @@
+---
+- name: Configure Node.js
+  when: dev_tools_nodejs_enable | bool
+  block:
+    - name: Install Node.js
+      community.general.homebrew:
+        name: "{{ dev_tools_nodejs_package }}"
+        state: present
+
+    - name: Link keg-only Node.js into the prefix
+      ansible.builtin.command:
+        argv: ["{{ homebrew_prefix }}/bin/brew", link, --force, --overwrite, "{{ dev_tools_nodejs_package }}"]
+        creates: "{{ homebrew_prefix }}/bin/node"
+      when: "'@' in dev_tools_nodejs_package"

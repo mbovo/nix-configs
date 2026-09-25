@@ -1,0 +1,46 @@
+---
+- name: Install git packages
+  community.general.homebrew:
+    name: >-
+      {{ ([git_package] if git_enable | bool else [])
+         + (git_extra_packages if git_extra_enable | bool else [])
+         + ([git_gh_package] if git_gh_enable | bool else []) }}
+    state: present
+  when: git_enable | bool or git_extra_enable | bool or git_gh_enable | bool
+
+- name: Configure git
+  when: git_enable | bool
+  block:
+    - name: Create git config directory
+      ansible.builtin.file:
+        path: "{{ git_config_path | dirname }}"
+        state: directory
+        mode: "0755"
+
+    - name: Write git config
+      ansible.builtin.template:
+        src: gitconfig.j2
+        dest: "{{ git_config_path }}"
+        mode: "0644"
+
+- name: Copy gitignore_global
+  ansible.builtin.copy:
+    src: "{{ git_config_gitignore_global }}"
+    dest: "{{ home_directory }}/.gitignore_global"
+    mode: "0644"
+  when: git_config_gitignore_global | length > 0
+
+- name: Configure gh
+  when: git_gh_enable | bool
+  block:
+    - name: Create gh config directory
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.config/gh"
+        state: directory
+        mode: "0755"
+
+    - name: Write gh config
+      ansible.builtin.copy:
+        content: "{{ git_gh_settings | combine({'version': '1'}) | to_nice_yaml(indent=2, sort_keys=true) }}"
+        dest: "{{ home_directory }}/.config/gh/config.yml"
+        mode: "0644"

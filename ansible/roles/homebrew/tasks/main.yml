@@ -1,0 +1,93 @@
+---
+- name: Detect Rosetta translation
+  ansible.builtin.command: sysctl -n sysctl.proc_translated
+  register: homebrew_rosetta
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  when: ansible_facts['system'] == 'Darwin'
+
+- name: Refuse to install Homebrew from a Rosetta-translated process
+  ansible.builtin.assert:
+    that: homebrew_rosetta.stdout | default('0') | trim != '1'
+    fail_msg: Ansible runs under Rosetta; use a native Python so Homebrew lands in the right prefix.
+    quiet: true
+
+- name: Warn about Homebrew Tier 3 support on Intel macOS
+  ansible.builtin.debug:
+    msg: >-
+      Intel macOS is a Homebrew Tier 3 platform: formulae without x86_64 bottles are built from source.
+      Run `poetry run python scripts/check_brew_bottles.py --arch x86_64 <formula...>` to list them.
+  when:
+    - ansible_facts['system'] == 'Darwin'
+    - ansible_facts['architecture'] == 'x86_64'
+
+- name: Check for an existing Homebrew
+  ansible.builtin.stat:
+    path: "{{ homebrew_prefix }}/bin/brew"
+  register: homebrew_bin
+
+- name: Install Homebrew
+  when: not homebrew_bin.stat.exists
+  block:
+    - name: Check Xcode Command Line Tools
+      ansible.builtin.command: xcode-select -p
+      register: homebrew_clt
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      when: ansible_facts['system'] == 'Darwin'
+
+    - name: Require Xcode Command Line Tools
+      ansible.builtin.assert:
+        that: homebrew_clt.rc | default(0) == 0
+        fail_msg: Run `xcode-select --install` first, then re-run this playbook.
+        quiet: true
+
+    - name: Create Homebrew directories
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ ansible_facts['user_id'] }}"
+        group: "{{ 'admin' if ansible_facts['system'] == 'Darwin' else omit }}"
+        mode: "0755"
+      loop: "{{ homebrew_directories }}"
+
+    # `brew update` below moves the checkout to the latest stable tag.
+    - name: Clone Homebrew # noqa: latest[git]
+      ansible.builtin.git:
+        repo: "{{ homebrew_repo_url }}"
+        dest: "{{ homebrew_repository }}"
+        version: HEAD
+        update: false
+
+    - name: Link brew into the prefix
+      ansible.builtin.file:
+        src: "{{ homebrew_repository }}/bin/brew"
+        dest: "{{ homebrew_prefix }}/bin/brew"
+        state: link
+      when: homebrew_repository != homebrew_prefix
+
+    - name: Initial brew update (switches to the latest stable tag)
+      ansible.builtin.command: "{{ homebrew_prefix }}/bin/brew update --force --quiet"
+      changed_when: true
+      when: not ansible_check_mode
+
+- name: Update Homebrew
+  ansible.builtin.command: "{{ homebrew_prefix }}/bin/brew update --quiet"
+  register: homebrew_update_result
+  changed_when: "'Already up-to-date' not in homebrew_update_result.stdout"
+  when:
+    - homebrew_update | bool
+    - homebrew_bin.stat.exists
+    - not ansible_check_mode
+
+- name: Add brew shellenv to the login shell
+  ansible.builtin.blockinfile:
+    path: "{{ homebrew_shellenv_file }}"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED: homebrew"
+    block: |
+      eval "$({{ homebrew_prefix }}/bin/brew shellenv)"

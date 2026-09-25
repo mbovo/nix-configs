@@ -1,0 +1,43 @@
+---
+# hosts/0-type-desktop.nix
+# home.keyboard.layout ("it") and home.stateVersion only affect home-manager itself / X11 and have no equivalent here.
+
+cli_tools_direnv_enable: true
+cli_tools_editor_enable: true
+cli_tools_nix_utils_enable: true
+
+cli_tools_modern_bat_enable: true
+cli_tools_modern_yazi_enable: true
+cli_tools_modern_eza_enable: true
+cli_tools_modern_fd_enable: true
+cli_tools_modern_ripgrep_enable: true
+cli_tools_modern_jq_enable: true
+cli_tools_modern_fzf_enable: true
+cli_tools_modern_extra_enable: true
+
+dev_tools_python_enable: true
+
+fonts_nerd_fonts_enable: true
+
+git_enable: true
+git_config_username: Manuel Bovo
+git_config_email: manuel.bovo@gmail.com
+git_config_gitignore_global: "{{ config_dir }}/dotfiles/gitignore_global"
+
+sec_tools_enable: true
+ssh_enable: true
+
+shells_zsh_enable: true
+shells_zsh_extra_files:
+  .zshrc: "{{ config_dir }}/dotfiles/zshrc"
+  .zsh_alias: "{{ config_dir }}/dotfiles/zsh_alias"
+  .zsh_funx: "{{ config_dir }}/dotfiles/zsh_funx"
+  .p10k.zsh: "{{ config_dir }}/dotfiles/p10k.zsh"
+  .config/atuin/config.toml: "{{ config_dir }}/dotfiles/config/atuin/config.toml"
+
+shells_atuin_enable: true
+shells_atuin_key: "{{ priv_config_dir }}/common/dotfiles/local/share/atuin/atuin.key"
+shells_atuin_config: "{{ config_dir }}/dotfiles/config/atuin/config.toml"
+
+shells_wezterm_enable: false
+shells_wezterm_config_file: "{{ config_dir }}/dotfiles/wezterm.lua"

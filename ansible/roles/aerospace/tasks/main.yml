@@ -1,0 +1,25 @@
+---
+# The nix module only links config files; AeroSpace itself is not installed by it.
+- name: Configure AeroSpace
+  when: aerospace_enable | bool
+  block:
+    - name: Create AeroSpace directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ home_directory }}/.config/aerospace"
+        - "{{ home_directory }}/bin"
+
+    - name: Copy aerospace.toml
+      ansible.builtin.copy:
+        src: "{{ aerospace_config_file }}"
+        dest: "{{ home_directory }}/.config/aerospace/aerospace.toml"
+        mode: "0644"
+
+    - name: Install scratchpad.sh
+      ansible.builtin.copy:
+        src: "{{ aerospace_scratchpad_file }}"
+        dest: "{{ home_directory }}/bin/scratchpad.sh"
+        mode: "0755"

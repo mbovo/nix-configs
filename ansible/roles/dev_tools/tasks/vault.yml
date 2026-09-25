@@ -1,0 +1,6 @@
+---
+- name: Install Vault
+  community.general.homebrew:
+    name: "{{ dev_tools_vault_package }}"
+    state: present
+  when: dev_tools_vault_enable | bool

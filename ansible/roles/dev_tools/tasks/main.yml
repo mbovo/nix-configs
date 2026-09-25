@@ -1,0 +1,20 @@
+---
+- name: Python
+  ansible.builtin.import_tasks: python.yml
+  tags: [python]
+
+- name: Pulumi
+  ansible.builtin.import_tasks: pulumi.yml
+  tags: [pulumi]
+
+- name: Go
+  ansible.builtin.import_tasks: go.yml
+  tags: [go]
+
+- name: Node.js
+  ansible.builtin.import_tasks: nodejs.yml
+  tags: [nodejs]
+
+- name: Vault
+  ansible.builtin.import_tasks: vault.yml
+  tags: [vault]

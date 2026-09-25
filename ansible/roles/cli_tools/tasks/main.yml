@@ -1,0 +1,24 @@
+---
+- name: Direnv
+  ansible.builtin.import_tasks: direnv.yml
+  tags: [direnv]
+
+- name: Editor
+  ansible.builtin.import_tasks: editor.yml
+  tags: [editor]
+
+- name: GNU tools
+  ansible.builtin.import_tasks: gnu.yml
+  tags: [gnu]
+
+- name: Modern tools
+  ansible.builtin.import_tasks: modern.yml
+  tags: [modern]
+
+- name: Network tools
+  ansible.builtin.import_tasks: net_tools.yml
+  tags: [network]
+
+- name: Nix utilities
+  ansible.builtin.import_tasks: nix_utils.yml
+  tags: [nix_utils]

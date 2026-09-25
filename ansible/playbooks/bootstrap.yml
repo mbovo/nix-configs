@@ -1,0 +1,18 @@
+---
+# First run on a new machine (needs sudo once to create the Homebrew prefix): add -K.
+- name: Bootstrap Homebrew, private config and sops
+  hosts: all
+  gather_facts: true
+  pre_tasks:
+    - name: Ensure the play runs as the configured user
+      ansible.builtin.assert:
+        that: ansible_facts['user_id'] == home_username
+        fail_msg: "Run as {{ home_username }} (current: {{ ansible_facts['user_id'] }}); use -l to pick the right host."
+        quiet: true
+  roles:
+    - role: homebrew
+      tags: [homebrew]
+    - role: priv_config
+      tags: [priv_config]
+    - role: sops
+      tags: [sops]

@@ -1,0 +1,5 @@
+---
+nixify_enable: false
+nixify_binary_file: ""
+# {relative dest under $HOME: source flake}
+nixify_config_files: {}

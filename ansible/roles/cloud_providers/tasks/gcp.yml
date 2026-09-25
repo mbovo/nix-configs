@@ -1,0 +1,15 @@
+---
+- name: Configure Google Cloud SDK
+  when: cloud_providers_gcp_enable | bool
+  block:
+    - name: Install Google Cloud SDK
+      community.general.homebrew_cask:
+        name: "{{ cloud_providers_gcp_cask }}"
+        state: present
+
+    - name: Install gcloud components
+      ansible.builtin.command:
+        argv: "{{ [homebrew_prefix ~ '/bin/gcloud', 'components', 'install', '--quiet'] + cloud_providers_gcp_components }}"
+      register: cloud_providers_gcp_components_result
+      changed_when: "'All components are up to date' not in cloud_providers_gcp_components_result.stderr"
+      when: not ansible_check_mode

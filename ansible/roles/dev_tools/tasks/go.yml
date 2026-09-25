@@ -1,0 +1,6 @@
+---
+- name: Install Go
+  community.general.homebrew:
+    name: "{{ dev_tools_go_package }}"
+    state: present
+  when: dev_tools_go_enable | bool

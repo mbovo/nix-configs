@@ -1,0 +1,24 @@
+---
+# python.nix
+dev_tools_python_enable: false
+dev_tools_python_package: python@3.14
+# python.withPackages(pp: [pp.pyyaml]) -> pip-installed into Homebrew's python (no formula exists)
+dev_tools_python_with_packages: [pyyaml]
+dev_tools_python_extra_packages: [pipenv, poetry]
+
+# pulumi.nix (the official tap bundles the language hosts, incl. pulumi-language-python)
+dev_tools_pulumi_enable: false
+dev_tools_pulumi_package: pulumi/tap/pulumi
+dev_tools_pulumi_extra_packages: []
+
+# go.nix
+dev_tools_go_enable: false
+dev_tools_go_package: go
+
+# nodejs.nix (versioned node formulae are keg-only; linked so node/npm are on PATH like nix)
+dev_tools_nodejs_enable: false
+dev_tools_nodejs_package: node
+
+# vault.nix
+dev_tools_vault_enable: false
+dev_tools_vault_package: hashicorp/tap/vault

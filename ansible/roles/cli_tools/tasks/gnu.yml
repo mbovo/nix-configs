@@ -1,0 +1,23 @@
+---
+- name: Configure GNU tools
+  when: cli_tools_gnu_enable | bool
+  block:
+    - name: Install GNU tools
+      community.general.homebrew:
+        name: >-
+          {{ cli_tools_gnu_packages
+             + (cli_tools_gnu_darwin_packages if ansible_facts['system'] == 'Darwin' else []) }}
+        state: present
+
+    - name: Put unprefixed GNU binaries on PATH
+      ansible.builtin.blockinfile:
+        path: "{{ home_directory }}/.zprofile"
+        create: true
+        mode: "0644"
+        marker: "# {mark} ANSIBLE MANAGED: gnubin"
+        insertafter: EOF
+        block: |
+          {% for formula in cli_tools_gnu_gnubin_formulae %}
+          export PATH="{{ homebrew_prefix }}/opt/{{ formula }}/libexec/gnubin:$PATH"
+          {% endfor %}
+      when: ansible_facts['system'] == 'Darwin'

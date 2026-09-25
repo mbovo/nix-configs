@@ -1,0 +1,31 @@
+{#- gitINI rendering compatible with lib.generators.toGitINI (home-manager programs.git). -#}
+{%- macro gitval(v) -%}
+{%- if v is sameas true -%}true
+{%- elif v is sameas false -%}false
+{%- elif v is number -%}{{ v }}
+{%- else -%}"{{ v | replace('\\', '\\\\') | replace('"', '\\"') }}"
+{%- endif -%}
+{%- endmacro -%}
+{%- macro gitsection(header, body) -%}
+{%- set scalars = body | dict2items | rejectattr('value', 'mapping') | list -%}
+{%- if scalars | length > 0 %}
+[{{ header }}]
+{% for item in scalars | sort(attribute='key') -%}
+{%- for v in (item.value if item.value is sequence and item.value is not string else [item.value]) -%}
+{{ '\t' }}{{ item.key }} = {{ gitval(v) }}
+{% endfor -%}
+{%- endfor -%}
+{%- endif -%}
+{%- endmacro -%}
+# {{ ansible_managed }}
+{% for section, body in git_settings | dictsort -%}
+{{ gitsection(section, body) }}
+{%- for sub, subbody in body | dictsort if subbody is mapping -%}
+{{ gitsection(section ~ ' "' ~ sub ~ '"', subbody) }}
+{%- endfor -%}
+{%- endfor %}
+{%- if git_gh_enable | bool -%}
+{%- for host in git_gh_credential_hosts | sort -%}
+{{ gitsection('credential "' ~ host ~ '"', {'helper': homebrew_prefix ~ '/bin/gh auth git-credential'}) }}
+{%- endfor -%}
+{%- endif %}

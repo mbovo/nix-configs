@@ -1,0 +1,6 @@
+---
+- name: Install Pulumi
+  community.general.homebrew:
+    name: "{{ [dev_tools_pulumi_package] + dev_tools_pulumi_extra_packages }}"
+    state: present
+  when: dev_tools_pulumi_enable | bool

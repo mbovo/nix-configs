@@ -1,0 +1,18 @@
+---
+- name: Install AWS CLI tools
+  community.general.homebrew:
+    name: "{{ [cloud_providers_aws_package] + cloud_providers_aws_extra_packages }}"
+    state: present
+  when: cloud_providers_aws_enable | bool
+
+- name: Deploy AWS config secret
+  ansible.builtin.include_role:
+    name: sops
+    tasks_from: secret.yml
+  vars:
+    sops_secret:
+      name: awsconfig
+      sops_file: "{{ cloud_providers_aws_extra_config }}"
+      path: "{{ home_directory }}/.aws/config"
+      mode: "0600"
+  when: cloud_providers_aws_extra_config | length > 0

@@ -1,0 +1,15 @@
+---
+k8s_enable: false
+k8s_packages: [kubernetes-cli, kubectx, kustomize, krew, helm]
+k8s_krew_list_file: "{{ config_dir }}/krew_list"
+k8s_extra_enable: false
+k8s_extra_packages: [kind, stern, kubeconform]
+k8s_extra_clusterctl_enable: false
+k8s_extra_clusterctl_package: clusterctl
+k8s_extra_kyverno_enable: false
+k8s_extra_kyverno_package: kyverno
+k8s_extra_fluxcd_enable: false
+# homebrew-core `flux` is InfluxData's; FluxCD's CLI is `fluxcd`.
+k8s_extra_fluxcd_package: fluxcd
+k8s_extra_argocd_enable: false
+k8s_extra_argocd_package: argocd

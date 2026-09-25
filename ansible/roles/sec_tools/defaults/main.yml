@@ -1,0 +1,5 @@
+---
+sec_tools_enable: false
+sec_tools_packages: [cfssl, age, gnupg, sops]
+sec_tools_extra_enable: false
+sec_tools_extra_packages: [bitwarden-cli]

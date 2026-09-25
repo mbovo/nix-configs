@@ -1,0 +1,8 @@
+---
+# Packages that only exist in nixpkgs; installed with `nix profile` when Nix is present.
+nix_profile_packages: []
+nix_profile_bin: /nix/var/nix/profiles/default/bin/nix
+nix_profile_flake: >-
+  {{ 'github:NixOS/nixpkgs/nixpkgs-26.05-darwin' if ansible_facts['system'] == 'Darwin'
+     else 'github:NixOS/nixpkgs/nixos-26.05' }}
+nix_profile_nix_args: [--extra-experimental-features, nix-command flakes]

@@ -1,0 +1,36 @@
+---
+- name: Check for Nix
+  ansible.builtin.stat:
+    path: "{{ nix_profile_bin }}"
+  register: nix_profile_nix
+
+- name: Skip nixpkgs-only packages without Nix
+  ansible.builtin.debug:
+    msg: "Nix is not installed, skipping (not available in Homebrew): {{ nix_profile_packages | join(', ') }}"
+  when: not nix_profile_nix.stat.exists
+
+- name: Install nixpkgs-only packages
+  when: nix_profile_nix.stat.exists
+  block:
+    - name: List the nix profile
+      ansible.builtin.command:
+        argv: "{{ [nix_profile_bin] + nix_profile_nix_args + ['profile', 'list', '--json'] }}"
+      register: nix_profile_list
+      changed_when: false
+      check_mode: false
+
+    - name: Collect installed profile entries
+      ansible.builtin.set_fact:
+        nix_profile_installed: >-
+          {{ (nix_profile_list.stdout | from_json).elements | default({}) }}
+
+    - name: Install packages with nix profile
+      ansible.builtin.command:
+        argv: "{{ [nix_profile_bin] + nix_profile_nix_args + ['profile', 'install', nix_profile_flake ~ '#' ~ item] }}"
+      loop: "{{ nix_profile_packages }}"
+      changed_when: true
+      when: >-
+        (nix_profile_installed is mapping and item not in nix_profile_installed)
+        or (nix_profile_installed is not mapping
+            and nix_profile_installed | selectattr('attrPath', 'defined')
+                | selectattr('attrPath', 'search', '\.' ~ item ~ '$') | list | length == 0)

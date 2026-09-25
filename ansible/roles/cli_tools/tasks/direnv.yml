@@ -1,0 +1,38 @@
+---
+- name: Configure direnv
+  when: cli_tools_direnv_enable | bool
+  block:
+    - name: Install direnv
+      community.general.homebrew:
+        name: "{{ cli_tools_direnv_package }}"
+        state: present
+
+    - name: Install nix-direnv
+      ansible.builtin.include_role:
+        name: nix_profile
+      vars:
+        nix_profile_packages: ["{{ cli_tools_direnv_nix_package }}"]
+
+    - name: Create direnv config directories
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.config/direnv/lib"
+        state: directory
+        mode: "0755"
+
+    - name: Write direnv.toml
+      ansible.builtin.copy:
+        content: "{{ cli_tools_direnv_config }}"
+        dest: "{{ home_directory }}/.config/direnv/direnv.toml"
+        mode: "0644"
+
+    - name: Check nix-direnv
+      ansible.builtin.stat:
+        path: "{{ home_directory }}/.nix-profile/share/nix-direnv/direnvrc"
+      register: cli_tools_nix_direnvrc
+
+    - name: Load nix-direnv from direnv
+      ansible.builtin.file:
+        src: "{{ cli_tools_nix_direnvrc.stat.path }}"
+        dest: "{{ home_directory }}/.config/direnv/lib/hm-nix-direnv.sh"
+        state: link
+      when: cli_tools_nix_direnvrc.stat.exists

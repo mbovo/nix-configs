@@ -1,0 +1,6 @@
+---
+homebrew_repo_url: https://github.com/Homebrew/brew
+# Apple Silicon/Linux keep the git repo in the prefix root; Intel uses <prefix>/Homebrew.
+homebrew_repository: "{{ homebrew_prefix if homebrew_prefix == '/opt/homebrew' else homebrew_prefix ~ '/Homebrew' }}"
+homebrew_shellenv_file: "{{ home_directory }}/.zprofile"
+homebrew_update: true

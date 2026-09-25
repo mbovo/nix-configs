@@ -1,0 +1,9 @@
+{#- Source file verbatim (never templated), with ~/.nix-profile paths rewritten. -#}
+{%- macro rewrite(text, pairs) -%}
+{%- if pairs -%}
+{{ rewrite(text | replace(pairs[0].key, pairs[0].value), pairs[1:]) }}
+{%- else -%}
+{{ text }}
+{%- endif -%}
+{%- endmacro -%}
+{{ rewrite(lookup('ansible.builtin.file', item.value, rstrip=false), shells_zsh_path_rewrites | dict2items) }}

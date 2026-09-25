@@ -1,0 +1,28 @@
+---
+- name: Install sops and age
+  community.general.homebrew:
+    name: "{{ sops_packages }}"
+    state: present
+
+- name: Create the age key directory
+  ansible.builtin.file:
+    path: "{{ sops_age_keyfile | dirname }}"
+    state: directory
+    mode: "0700"
+
+- name: Check the age key
+  ansible.builtin.stat:
+    path: "{{ sops_age_keyfile }}"
+  register: sops_age_key_stat
+
+- name: Warn when the age key is missing
+  ansible.builtin.debug:
+    msg: "{{ sops_age_keyfile }} is missing: secrets cannot be decrypted until you restore it."
+  when: not sops_age_key_stat.stat.exists
+
+- name: Deploy global secrets
+  ansible.builtin.include_tasks: secret.yml
+  loop: "{{ sops_secrets }}"
+  loop_control:
+    loop_var: sops_secret
+    label: "{{ sops_secret.name }}"

@@ -1,0 +1,34 @@
+---
+# hosts/2-host-M-PA-LT75QJ7NN7.nix (aarch64-darwin, work laptop)
+home_username: manuelbovo
+
+# modern.extra.packages = default_packages with devbox from unstable (brew/tap always tracks latest).
+cli_tools_modern_extra_packages: "{{ cli_tools_modern_extra_default_packages }}"
+
+# pulumi-bin from nixpkgs master -> upstream binary tap.
+dev_tools_pulumi_enable: true
+dev_tools_pulumi_package: pulumi/tap/pulumi
+dev_tools_pulumi_extra_packages: []
+
+dev_tools_python_package: python@3.14
+dev_tools_python_extra_packages: [pipenv, poetry]
+dev_tools_go_enable: true
+dev_tools_vault_enable: true
+dev_tools_nodejs_enable: true
+dev_tools_nodejs_package: node@22
+
+docker_enable: true
+
+cloud_providers_aws_enable: true
+
+k8s_enable: true
+k8s_extra_enable: true
+k8s_extra_clusterctl_enable: true
+k8s_extra_kyverno_enable: true
+k8s_extra_fluxcd_enable: true
+
+nixify_enable: true
+nixify_binary_file: "{{ config_dir }}/flakes/nixify"
+nixify_config_files:
+  bin/flake_venv/flake.nix: "{{ config_dir }}/flakes/venv.nix"
+  bin/flake_helm/flake.nix: "{{ config_dir }}/flakes/helm.nix"

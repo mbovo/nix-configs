@@ -1,0 +1,27 @@
+---
+# Like the nix module this only places the Brewfile; `brew bundle` stays a manual step.
+- name: Place Brewfile
+  when: brew_enable | bool
+  block:
+    - name: Check Brewfile source
+      ansible.builtin.stat:
+        path: "{{ brew_config_file }}"
+      register: brew_config_stat
+
+    - name: Create Brewfile directory
+      ansible.builtin.file:
+        path: "{{ home_directory }}/.config/brewfile"
+        state: directory
+        mode: "0755"
+
+    - name: Copy Brewfile
+      ansible.builtin.copy:
+        src: "{{ brew_config_file }}"
+        dest: "{{ home_directory }}/.config/brewfile/Brewfile"
+        mode: "0644"
+      when: brew_config_stat.stat.exists
+
+    - name: Warn about missing Brewfile
+      ansible.builtin.debug:
+        msg: "{{ brew_config_file }} not found; is the private repository checked out?"
+      when: not brew_config_stat.stat.exists

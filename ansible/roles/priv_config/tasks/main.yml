@@ -1,0 +1,19 @@
+---
+- name: Fetch the private configuration repository
+  ansible.builtin.git:
+    repo: "{{ priv_config_repo }}"
+    dest: "{{ priv_config_dir }}"
+    version: "{{ priv_config_version }}"
+    update: "{{ priv_config_update }}"
+    accept_newhostkey: true
+  when: priv_config_enable | bool
+
+- name: Look for host overrides in the private repository
+  ansible.builtin.stat:
+    path: "{{ priv_config_vars_file }}"
+  register: priv_config_vars_stat
+
+- name: Load host overrides from the private repository
+  ansible.builtin.include_vars:
+    file: "{{ priv_config_vars_file }}"
+  when: priv_config_vars_stat.stat.exists

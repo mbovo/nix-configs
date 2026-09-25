@@ -1,0 +1,17 @@
+---
+- name: Configure Python
+  when: dev_tools_python_enable | bool
+  block:
+    - name: Install Python and tooling
+      community.general.homebrew:
+        name: "{{ [dev_tools_python_package] + dev_tools_python_extra_packages }}"
+        state: present
+
+    - name: Install Python modules into Homebrew's python
+      ansible.builtin.pip:
+        name: "{{ dev_tools_python_with_packages }}"
+        executable: "{{ homebrew_prefix }}/opt/{{ dev_tools_python_package }}/libexec/bin/pip"
+        extra_args: --break-system-packages
+      when:
+        - dev_tools_python_with_packages | length > 0
+        - not ansible_check_mode
