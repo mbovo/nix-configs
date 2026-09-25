@@ -16,7 +16,7 @@ dev_tools_python_package: python@3.14
 dev_tools_python_extra_packages: [pipenv, poetry]
 dev_tools_go_enable: true
 
-docker_enable: true
+docker_enable: false
 docker_darwin_packages: [qemu, lima, colima]
 
 k8s_enable: true
@@ -25,7 +25,7 @@ k8s_extra_clusterctl_enable: true
 k8s_extra_kyverno_enable: true
 k8s_extra_fluxcd_enable: true
 
-nixify_enable: true
+nixify_enable: false
 nixify_binary_file: "{{ config_dir }}/flakes/nixify"
 nixify_config_files:
   bin/flake_venv/flake.nix: "{{ config_dir }}/flakes/venv.nix"
