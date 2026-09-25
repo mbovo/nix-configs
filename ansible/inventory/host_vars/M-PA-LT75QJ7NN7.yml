@@ -2,8 +2,9 @@
 # hosts/2-host-M-PA-LT75QJ7NN7.nix (aarch64-darwin, work laptop)
 home_username: manuelbovo
 
-# modern.extra.packages = default_packages with devbox from unstable (brew/tap always tracks latest).
+# modern.extra.packages = default_packages with devbox from unstable.
 cli_tools_modern_extra_packages: "{{ cli_tools_modern_extra_default_packages }}"
+cli_tools_modern_extra_nix_packages: "{{ cli_tools_modern_extra_default_nix_packages }}"
 
 # pulumi-bin from nixpkgs master -> upstream binary tap.
 dev_tools_pulumi_enable: true

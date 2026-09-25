@@ -1,5 +1,7 @@
 ---
 aerospace_enable: false
+# Only published in the author's tap, not in homebrew/cask.
+aerospace_cask: nikitabobko/tap/aerospace
 aerospace_config_file: ""
 aerospace_scratchpad_file: ""
 

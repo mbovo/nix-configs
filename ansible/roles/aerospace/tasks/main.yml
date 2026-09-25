@@ -6,10 +6,16 @@
   vars:
     manifest_files: "{{ aerospace_managed_files }}"
 
-# The nix module only links config files; AeroSpace itself is not installed by it.
 - name: Configure AeroSpace
   when: aerospace_enable | bool
   block:
+    - name: Install AeroSpace
+      ansible.builtin.include_role:
+        name: homebrew
+        tasks_from: packages.yml
+      vars:
+        homebrew_casks: ["{{ aerospace_cask }}"]
+
     - name: Create AeroSpace directories
       ansible.builtin.file:
         path: "{{ item }}"

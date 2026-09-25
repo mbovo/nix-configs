@@ -38,8 +38,12 @@ cli_tools_modern_fd_enable: false
 cli_tools_modern_fd_package: fd
 cli_tools_modern_extra_enable: false
 cli_tools_modern_extra_packages: []
-# nixpkgs yq is the python jq wrapper -> python-yq; devbox comes from its official tap.
-cli_tools_modern_extra_default_packages: [glow, asciinema, jetify-com/devbox/devbox, python-yq]
+# nixpkgs yq is the python jq wrapper -> python-yq.
+cli_tools_modern_extra_default_packages: [glow, asciinema, python-yq]
+# devbox has no Homebrew package (only Jetify's curl installer) and needs Nix anyway.
+cli_tools_modern_extra_nix_packages: []
+cli_tools_modern_extra_default_nix_packages: [devbox]
+cli_tools_modern_extra_nix_flake: github:NixOS/nixpkgs/nixpkgs-unstable
 
 # net-tools.nix (hping is nixpkgs-only)
 cli_tools_network_enable: false

@@ -14,6 +14,16 @@
          + ([cli_tools_modern_fd_package] if cli_tools_modern_fd_enable | bool else [])
          + (cli_tools_modern_extra_packages if cli_tools_modern_extra_enable | bool else []) }}
 
+- name: Install nixpkgs-only modern CLI tools
+  ansible.builtin.include_role:
+    name: nix_profile
+  vars:
+    nix_profile_packages: "{{ cli_tools_modern_extra_nix_packages }}"
+    nix_profile_flake: "{{ cli_tools_modern_extra_nix_flake }}"
+  when:
+    - cli_tools_modern_extra_enable | bool
+    - cli_tools_modern_extra_nix_packages | length > 0
+
 - name: Configure bat
   when: cli_tools_modern_bat_enable | bool
   block:

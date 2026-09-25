@@ -21,10 +21,11 @@
 - name: Install and record packages
   when: homebrew_packages_brew.stat.exists
   block:
-    - name: Select third-party taps needed by the formulae
+    - name: Select third-party taps needed by the packages
       ansible.builtin.set_fact:
         homebrew_needed_taps: >-
-          {{ homebrew_formulae | default([]) | select('search', '^[^/]+/[^/]+/[^/]+$')
+          {{ (homebrew_formulae | default([]) + homebrew_casks | default([]))
+             | select('search', '^[^/]+/[^/]+/[^/]+$')
              | map('regex_replace', '/[^/]+$', '') | unique | list }}
 
     - name: List current taps
@@ -54,20 +55,26 @@
     - name: Start from all requested formulae
       ansible.builtin.set_fact:
         homebrew_formulae_ready: "{{ homebrew_formulae | default([]) }}"
+        homebrew_new_taps: "{{ homebrew_tap_result.results | default([]) | selectattr('changed') | map(attribute='item') | list }}"
 
-    # A dry run cannot query formulae from taps it has not really added.
+    # A dry run cannot query packages from taps it has not really added.
     - name: Leave out formulae from taps a real run would add
       ansible.builtin.set_fact:
         homebrew_formulae_ready: "{{ homebrew_formulae_ready | reject('match', (item ~ '/') | regex_escape) | list }}"
-      loop: "{{ homebrew_tap_result.results | default([]) | selectattr('changed') | map(attribute='item') | list }}"
+      loop: "{{ homebrew_new_taps }}"
       when: ansible_check_mode
 
-    - name: Report formulae from taps a real run would add
+    - name: Report packages from taps a real run would add
       ansible.builtin.debug:
-        msg: "Would install from new taps: {{ homebrew_formulae | default([]) | difference(homebrew_formulae_ready) }}"
-      when: homebrew_formulae | default([]) | difference(homebrew_formulae_ready) | length > 0
+        msg: >-
+          Would install from new taps:
+          {{ homebrew_formulae | default([]) | difference(homebrew_formulae_ready)
+             + homebrew_casks | default([]) | select('match', '^(' ~ (homebrew_new_taps | map('regex_escape') | join('|')) ~ ')/') | list }}
+      when:
+        - ansible_check_mode
+        - homebrew_new_taps | length > 0
 
-    - name: Install formulae
+    - name: "Install formulae {{ homebrew_formulae_ready | join(', ') }}"
       community.general.homebrew:
         name: "{{ homebrew_formulae_ready }}"
         state: present
@@ -89,6 +96,7 @@
         state: present
       loop: "{{ homebrew_casks | default([]) }}"
       register: homebrew_casks_result
+      when: not ansible_check_mode or (item | regex_replace('/[^/]+$', '')) not in homebrew_new_taps
 
     - name: Record installed casks
       ansible.builtin.include_role:
