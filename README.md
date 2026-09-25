@@ -62,53 +62,44 @@ The [ansible/](./ansible) directory reproduces the same setup without nix: packa
 | `hosts/2-host-<host>.nix` | `ansible/inventory/host_vars/<host>.yml` |
 | `nix-configs-priv/hosts/<host>` | `nix-configs-priv/hosts/<host>/ansible.yml` (optional, loaded if present) |
 
-Inventory hosts are `mbp` and `M-PA-LT75QJ7NN7`. They don't match `hostname`, so always pick one with `-l`/`HOST=`.
+Inventory hosts are `mbp` and `M-PA-LT75QJ7NN7`. They don't match `hostname`: `install.sh` picks the host from the current user, and plain `ansible-playbook` needs `-l <host>`.
 
 ### Prerequisites
 
-1. Xcode Command Line Tools: `xcode-select --install`
+1. Xcode Command Line Tools: `xcode-select --install` (provides `git`, `python3` and `bash`, the only tools needed)
 2. The age key at `~/.config/sops/age/keys.txt` (secrets are skipped with a warning until it exists)
-3. An SSH key with access to the private repository (`gh auth login`)
+3. An SSH key with access to the private repository
 
-### Setup
-
-Creates `ansible/.venv` with Poetry and a Python 3.12+ interpreter. Poetry installs one if the system has none. It also installs the collections required by the roles.
+### Bootstrap a bare machine
 
 ```bash
-task ansible:setup        # or: cd ansible && ./bootstrap.sh
+git clone https://github.com/mbovo/nix-configs.git ~/oss/nix-configs
+~/oss/nix-configs/ansible/install.sh --check   # optional dry run, no sudo
+~/oss/nix-configs/ansible/install.sh           # asks for the sudo password once, to create the Homebrew prefix
 ```
 
-### Apply
+`install.sh` runs these steps:
+
+1. `bootstrap.sh` builds `ansible/.venv` with pure Python and Poetry. Poetry downloads a standalone Python 3.12+ if the system one is too old. The Ansible collections are installed too.
+2. It picks the inventory host whose `home_username` matches the current user, or the one given with `--host`.
+3. `playbooks/bootstrap.yml` installs Homebrew, clones the private repo and installs sops/age.
+4. `playbooks/site.yml` applies the configuration, the equivalent of `home-manager switch`.
+
+Re-run it at any time to apply changes; it is idempotent. Options:
 
 ```bash
-# First run only: installs Homebrew (asks for the sudo password), clones the private repo, installs sops/age
-task ansible:bootstrap HOST=mbp
-
-# Equivalent of `home-manager switch`
-task ansible:apply HOST=mbp
-```
-
-Or directly from `ansible/`:
-
-```bash
-.venv/bin/ansible-playbook playbooks/bootstrap.yml -l mbp -K
-.venv/bin/ansible-playbook playbooks/site.yml -l mbp
-.venv/bin/ansible-playbook playbooks/site.yml -l mbp --tags git,shells   # only some roles
+./install.sh --host mbp                  # force the inventory host
+./install.sh --check                     # dry run (--check --diff)
+./install.sh --uninstall [--check]       # see Uninstall below
+./install.sh --setup-only                # only (re)build the virtualenv
+./install.sh -- --tags git,shells        # anything after -- goes to ansible-playbook
 ```
 
 Role tags match the role names (`cli_tools`, `git`, `shells`, `k8s`, ...). Finer tags are also available, e.g. `zsh`, `atuin`, `modern`, `python`, `aws`.
 
-### Dry run
+On a machine without Homebrew, the dry run can only simulate `bootstrap.yml`: `site.yml` stops early because there is no brew to query yet.
 
-All playbooks support `--check --diff`. A dry run changes nothing and needs no sudo password:
-
-```bash
-task ansible:bootstrap:dry-run HOST=mbp
-task ansible:apply:dry-run HOST=mbp
-task ansible:uninstall:dry-run HOST=mbp
-```
-
-Before Homebrew exists, the apply dry run stops early. Dry-run the bootstrap instead.
+The playbooks can also be run directly from `ansible/`, e.g. `.venv/bin/ansible-playbook playbooks/site.yml -l mbp --check --diff`. If [go-task](https://taskfile.dev) is installed, there are `task ansible:*` shortcuts too (see [Taskfile.yml](./Taskfile.yml)).
 
 ### Uninstall
 
@@ -121,9 +112,10 @@ Ansible keeps a record of what it did in `~/.local/state/nix-configs-ansible/`:
 `playbooks/uninstall.yml` uses that record to remove only what Ansible added. It then restores the previous files and deletes the empty directories it had created:
 
 ```bash
-task ansible:uninstall HOST=mbp          # asks for sudo, needed to remove Homebrew itself
-.venv/bin/ansible-playbook playbooks/uninstall.yml -l mbp -K --tags files      # only restore dotfiles
-.venv/bin/ansible-playbook playbooks/uninstall.yml -l mbp -K --tags packages   # only remove packages
+./install.sh --uninstall --check              # show what would be removed/restored
+./install.sh --uninstall                      # asks for sudo only if Homebrew itself will be removed
+./install.sh --uninstall -- --tags files      # only restore dotfiles
+./install.sh --uninstall -- --tags packages   # only remove packages
 ```
 
 Homebrew itself is removed only if Ansible installed it and nothing installed outside Ansible remains. To remove it anyway, add `-e homebrew_uninstall_force=true`. The age key is never deleted.
@@ -133,4 +125,4 @@ Homebrew itself is removed only if Ansible installed it and nothing installed ou
 - **Intel Macs (x86_64):** Homebrew supports them only at Tier 3, so formulae without an Intel bottle are compiled from source. To list them: `cd ansible && .venv/bin/python scripts/check_brew_bottles.py --arch x86_64 <formula...>`
 - **Nixpkgs-only tools:** `nix-direnv`, `hping`, `nil`, `nvd`, `nix-diff` and `nix-output-monitor` aren't in Homebrew. They're installed with `nix profile` when nix is present, otherwise skipped.
 - **New host:** add it to `ansible/inventory/hosts.yml` (groups `desktop`/`darwin`) and create `ansible/inventory/host_vars/<host>.yml` with at least `home_username`.
-- **Lint:** `task ansible:lint`
+- **Lint:** `cd ansible && .venv/bin/ansible-lint playbooks/ roles/`

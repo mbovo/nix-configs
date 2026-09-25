@@ -68,8 +68,5 @@ fi
 
 cat <<EOF
 
-Controller ready. Next steps:
-  source .venv/bin/activate
-  ansible-playbook playbooks/bootstrap.yml -l <host> -K   # installs Homebrew (sudo needed once)
-  ansible-playbook playbooks/site.yml -l <host>
+Controller ready. Next step: ./install.sh [--check] [--host <host>]
 EOF
