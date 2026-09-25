@@ -14,9 +14,19 @@ homebrew_prefix: >-
 config_dir: "{{ (inventory_dir ~ '/../../config') | realpath }}"
 
 # nix-configs-priv flake input.
+# priv_config_source: local (existing checkout, never modified), git (clone it), none (skip private config).
+# Defaults to local when priv_config_local_dir is set (install.sh --priv-dir DIR), otherwise git.
+priv_config_local_dir: ""
+priv_config_source: "{{ 'local' if priv_config_local_dir | length > 0 else 'git' }}"
 priv_config_repo: git@github.com:mbovo/nix-configs-priv.git
 priv_config_version: main
-priv_config_dir: "{{ home_directory }}/.local/share/nix-configs-priv"
+# Private key for the clone; empty uses the ssh agent / ~/.ssh defaults.
+priv_config_ssh_key: ""
+priv_config_clone_dir: "{{ home_directory }}/.local/share/nix-configs-priv"
+priv_config_dir: "{{ (priv_config_local_dir | expanduser) if priv_config_source == 'local' else priv_config_clone_dir }}"
+# For paths in nix-configs-priv/hosts/<host>/ansible.yml.
+priv_config_host_dir: "{{ priv_config_dir }}/hosts/{{ inventory_hostname }}"
+priv_config_common_dir: "{{ priv_config_dir }}/common"
 
 # sops-nix: age key used to decrypt secrets; consumed by the community.sops lookup too.
 sops_age_keyfile: "{{ home_directory }}/.config/sops/age/keys.txt"

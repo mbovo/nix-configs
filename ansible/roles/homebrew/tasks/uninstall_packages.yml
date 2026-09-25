@@ -86,16 +86,30 @@
     manifest_items: "{{ homebrew_uninstall_removed | default([]) }}"
   when: not ansible_check_mode
 
-- name: Remove taps pulled in by tapped formulae
+- name: Read recorded taps
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: read.yml
+  vars:
+    manifest_kind: taps
+
+- name: Remove taps added by Ansible
   community.general.homebrew_tap:
     name: "{{ item }}"
     state: absent
-  loop: >-
-    {{ homebrew_uninstall_formulae | select('search', '^[^/]+/[^/]+/[^/]+$')
-       | map('regex_replace', '/[^/]+$', '') | unique | list }}
+  loop: "{{ manifest_entries }}"
   register: homebrew_untap_result
-  # brew refuses to untap while other formulae from the tap are installed.
+  # brew refuses to untap while formulae from the tap are still installed.
   failed_when: false
+
+- name: Forget removed taps
+  ansible.builtin.include_role:
+    name: manifest
+    tasks_from: forget.yml
+  vars:
+    manifest_kind: taps
+    manifest_items: "{{ homebrew_untap_result.results | default([]) | selectattr('changed') | map(attribute='item') | list }}"
+  when: not ansible_check_mode
 
 - name: Remove orphaned dependencies
   ansible.builtin.command:

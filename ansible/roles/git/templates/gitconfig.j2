@@ -29,3 +29,6 @@
 {{ gitsection('credential "' ~ host ~ '"', {'helper': homebrew_prefix ~ '/bin/gh auth git-credential'}) }}
 {%- endfor -%}
 {%- endif %}
+{%- for inc in git_includes -%}
+{{ gitsection(('includeIf "' ~ inc.condition ~ '"') if inc.condition is defined else 'include', {'path': inc.path}) }}
+{%- endfor %}

@@ -36,7 +36,7 @@ shells_zsh_extra_files:
   .config/atuin/config.toml: "{{ config_dir }}/dotfiles/config/atuin/config.toml"
 
 shells_atuin_enable: true
-shells_atuin_key: "{{ priv_config_dir }}/common/dotfiles/local/share/atuin/atuin.key"
+shells_atuin_key: "{{ priv_config_common_dir }}/dotfiles/local/share/atuin/atuin.key"
 shells_atuin_config: "{{ config_dir }}/dotfiles/config/atuin/config.toml"
 
 shells_wezterm_enable: false

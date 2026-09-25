@@ -5,7 +5,7 @@ aerospace_config_file: "{{ config_dir }}/dotfiles/config/aerospace/aerospace.tom
 aerospace_scratchpad_file: "{{ config_dir }}/scripts/scratchpad.sh"
 
 brew_enable: true
-brew_config_file: "{{ priv_config_dir }}/hosts/{{ inventory_hostname }}/dotfiles/Brewfile"
+brew_config_file: "{{ priv_config_host_dir }}/dotfiles/Brewfile"
 
 cli_tools_gnu_enable: true
 cli_tools_network_enable: true

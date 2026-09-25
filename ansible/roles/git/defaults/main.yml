@@ -9,6 +9,8 @@ git_config_gitignore_global: ""
 git_extra_config_signing_key: "~/.ssh/id_ed25519.pub"
 # home-manager writes programs.git to the XDG location
 git_config_path: "{{ home_directory }}/.config/git/config"
+# programs.git.includes equivalent: [{path, condition (optional, e.g. "gitdir:~/prjs/")}].
+git_includes: []
 
 git_settings:
   alias:

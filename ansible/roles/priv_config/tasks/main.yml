@@ -1,4 +1,12 @@
 ---
+- name: Validate the private configuration source
+  ansible.builtin.assert:
+    that:
+      - priv_config_source in ['git', 'local', 'none']
+      - priv_config_source != 'local' or priv_config_local_dir | length > 0
+    fail_msg: "priv_config_source must be git, local (with priv_config_local_dir) or none; got '{{ priv_config_source }}'."
+    quiet: true
+
 - name: Track the private configuration checkout
   ansible.builtin.include_role:
     name: manifest
@@ -6,14 +14,90 @@
   vars:
     manifest_files: "{{ priv_config_managed_files }}"
 
-- name: Fetch the private configuration repository
-  ansible.builtin.git:
-    repo: "{{ priv_config_repo }}"
-    dest: "{{ priv_config_dir }}"
-    version: "{{ priv_config_version }}"
-    update: "{{ priv_config_update }}"
-    accept_newhostkey: true
-  when: priv_config_enable | bool
+- name: Check the SSH key for the private repository
+  ansible.builtin.stat:
+    path: "{{ priv_config_ssh_key | expanduser }}"
+  register: priv_config_key_stat
+  when:
+    - priv_config_source == 'git'
+    - priv_config_ssh_key | length > 0
+
+- name: Require the SSH key
+  ansible.builtin.assert:
+    that: priv_config_key_stat.stat.exists
+    fail_msg: "SSH key {{ priv_config_ssh_key }} not found."
+    quiet: true
+  when:
+    - priv_config_source == 'git'
+    - priv_config_ssh_key | length > 0
+
+- name: Clone the private configuration repository
+  when: priv_config_source == 'git'
+  block:
+    - name: Fetch the private configuration repository
+      ansible.builtin.git:
+        repo: "{{ priv_config_repo }}"
+        dest: "{{ priv_config_clone_dir }}"
+        version: "{{ priv_config_version }}"
+        update: "{{ priv_config_update }}"
+        accept_newhostkey: true
+        key_file: "{{ (priv_config_ssh_key | expanduser) if priv_config_ssh_key | length > 0 else omit }}"
+  rescue:
+    - name: Explain how to provide the private repository
+      ansible.builtin.fail:
+        msg: >-
+          Cannot clone {{ priv_config_repo }}: {{ ansible_failed_result.msg | default('') | trim }}.
+          Pass a key with --priv-ssh-key PATH (priv_config_ssh_key), point to an existing checkout with
+          --priv-dir DIR (priv_config_local_dir), or skip it with --no-priv (priv_config_source=none).
+
+- name: Check the local private configuration checkout
+  ansible.builtin.stat:
+    path: "{{ priv_config_dir }}"
+  register: priv_config_local_stat
+  when: priv_config_source == 'local'
+
+- name: Require the local private configuration checkout
+  ansible.builtin.assert:
+    that: priv_config_local_stat.stat.isdir | default(false)
+    fail_msg: "priv_config_local_dir {{ priv_config_dir }} is not a directory."
+    quiet: true
+  when: priv_config_source == 'local'
+
+- name: Warn that private configuration is skipped
+  ansible.builtin.debug:
+    msg: Private configuration disabled; Brewfile, secrets, files and host overrides from nix-configs-priv are skipped.
+  when: priv_config_source == 'none'
 
 - name: Load host overrides
   ansible.builtin.import_tasks: load_vars.yml
+  when: priv_config_source != 'none'
+
+- name: Place plain files from the private repository
+  when:
+    - priv_config_source != 'none'
+    - priv_config_files | length > 0
+  block:
+    - name: Track private files
+      ansible.builtin.include_role:
+        name: manifest
+        tasks_from: track_files.yml
+      vars:
+        manifest_files: "{{ priv_config_files | map(attribute='dest') | map('regex_replace', '^', home_directory ~ '/') | list }}"
+
+    # No mode: existing directories (e.g. ~/.ssh) keep their permissions.
+    - name: Create parent directories for private files
+      ansible.builtin.file: # noqa: risky-file-permissions
+        path: "{{ (home_directory ~ '/' ~ item.dest) | dirname }}"
+        state: directory
+      loop: "{{ priv_config_files }}"
+      loop_control:
+        label: "{{ item.dest }}"
+
+    - name: Copy private files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ home_directory }}/{{ item.dest }}"
+        mode: "{{ item.mode | default('0644') }}"
+      loop: "{{ priv_config_files }}"
+      loop_control:
+        label: "{{ item.dest }}"

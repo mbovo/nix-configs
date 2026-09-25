@@ -1,8 +1,9 @@
 ---
-priv_config_enable: true
 priv_config_update: true
 # Host overrides (ansible counterpart of nix-configs-priv/hosts/<hostname>/default.nix).
 priv_config_vars_file: "{{ priv_config_dir }}/hosts/{{ inventory_hostname }}/ansible.yml"
+# Plain (not encrypted) files to place in $HOME, home.file equivalent: [{src, dest (relative to $HOME), mode}].
+priv_config_files: []
 
-# Paths this role writes (backed up before the first write, restored on uninstall).
-priv_config_managed_files: "{{ [priv_config_dir] if priv_config_enable | bool else [] }}"
+# Paths this role writes (backed up before the first write, restored on uninstall). A local checkout is not ours.
+priv_config_managed_files: "{{ [priv_config_clone_dir] if priv_config_source == 'git' else [] }}"

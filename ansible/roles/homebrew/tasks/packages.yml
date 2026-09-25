@@ -21,12 +21,58 @@
 - name: Install and record packages
   when: homebrew_packages_brew.stat.exists
   block:
+    - name: Select third-party taps needed by the formulae
+      ansible.builtin.set_fact:
+        homebrew_needed_taps: >-
+          {{ homebrew_formulae | default([]) | select('search', '^[^/]+/[^/]+/[^/]+$')
+             | map('regex_replace', '/[^/]+$', '') | unique | list }}
+
+    - name: List current taps
+      ansible.builtin.command:
+        argv: ["{{ homebrew_prefix }}/bin/brew", tap]
+      register: homebrew_current_taps
+      changed_when: false
+      check_mode: false
+      when: homebrew_needed_taps | length > 0
+
+    # Homebrew no longer taps implicitly on `brew install user/tap/formula`.
+    - name: Add third-party taps
+      community.general.homebrew_tap:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ homebrew_needed_taps | reject('in', homebrew_current_taps.stdout_lines | default([])) | list }}"
+      register: homebrew_tap_result
+
+    - name: Record added taps
+      ansible.builtin.include_role:
+        name: manifest
+        tasks_from: record.yml
+      vars:
+        manifest_kind: taps
+        manifest_items: "{{ homebrew_tap_result.results | default([]) | selectattr('changed') | map(attribute='item') | list }}"
+
+    - name: Start from all requested formulae
+      ansible.builtin.set_fact:
+        homebrew_formulae_ready: "{{ homebrew_formulae | default([]) }}"
+
+    # A dry run cannot query formulae from taps it has not really added.
+    - name: Leave out formulae from taps a real run would add
+      ansible.builtin.set_fact:
+        homebrew_formulae_ready: "{{ homebrew_formulae_ready | reject('match', (item ~ '/') | regex_escape) | list }}"
+      loop: "{{ homebrew_tap_result.results | default([]) | selectattr('changed') | map(attribute='item') | list }}"
+      when: ansible_check_mode
+
+    - name: Report formulae from taps a real run would add
+      ansible.builtin.debug:
+        msg: "Would install from new taps: {{ homebrew_formulae | default([]) | difference(homebrew_formulae_ready) }}"
+      when: homebrew_formulae | default([]) | difference(homebrew_formulae_ready) | length > 0
+
     - name: Install formulae
       community.general.homebrew:
-        name: "{{ homebrew_formulae }}"
+        name: "{{ homebrew_formulae_ready }}"
         state: present
       register: homebrew_formulae_result
-      when: homebrew_formulae | default([]) | length > 0
+      when: homebrew_formulae_ready | length > 0
 
     - name: Record installed formulae
       ansible.builtin.include_role:
